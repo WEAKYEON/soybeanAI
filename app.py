@@ -2,8 +2,9 @@ from flask import Flask, request, render_template, jsonify
 from io import BytesIO
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
+from waitress import serve
 import numpy as np
-import os  # <--- เพิ่มตรงนี้
+import os
 
 app = Flask(__name__)
 
@@ -39,7 +40,5 @@ def predict():
     })
 
 if __name__ == "__main__":
-    # ใช้ port จาก environment variable ของ Render หรือ default 8080
     port = int(os.environ.get("PORT", 8080))
-    from waitress import serve
     serve(app, host="0.0.0.0", port=port)
