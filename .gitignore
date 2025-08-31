@@ -1,0 +1,21 @@
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# TensorFlow / Keras model files
+*.h5
+*.keras
+
+# TensorFlow.js converted model
+tfjs_model/
+
+# Logs
+*.log
+
+# IDE settings
+.vscode/
+.idea/

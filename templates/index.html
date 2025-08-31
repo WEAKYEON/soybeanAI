@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="th" class="scroll-smooth" data-color-mode>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SoySelect.AI — เดโมการคัดเลือกเมล็ดถั่วเหลืองด้วย AI</title>
+  <meta name="description" content="เดโมเว็บความเร็วสูงสำหรับการคัดเลือกเมล็ดถั่วเหลืองด้วย AI: อัปโหลดภาพ, จำลองผลการวิเคราะห์, UI สวย ใช้ TailwindCSS"> 
+  <meta name="theme-color" content="#0ea5e9" />
+  <meta property="og:title" content="SoySelect.AI — เดโมคัดเลือกเมล็ดถั่วเหลืองด้วย AI" />
+  <meta property="og:description" content="อัปโหลดภาพเมล็ด, จำลองการจำแนกด้วย AI, ดีไซน์สวย ประสิทธิภาพสูง" />
+  <meta property="og:type" content="website" />
+
+  <!-- Tailwind CDN (สำหรับโปรโตไทป์/เดโม). สำหรับโปรดักชันควร build แบบ JIT เพื่อลดขนาด CSS. -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ["Inter var", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Noto Sans Thai", "sans-serif"] },
+          colors: {
+            soy: {
+              50: '#f4f8f3', 100: '#e8f1e2', 200: '#cfe2c2', 300: '#b6d3a2', 400: '#9cc583',
+              500: '#83b764', 600: '#6a984f', 700: '#52783d', 800: '#3a582b', 900: '#233a1b'
+            }
+          },
+          boxShadow: {
+            glow: '0 10px 30px rgba(14,165,233,.35)'
+          },
+          backgroundImage: {
+            hero: 'radial-gradient(60% 80% at 70% 10%, rgba(14,165,233,.25), transparent 60%), radial-gradient(40% 60% at 10% 20%, rgba(16,185,129,.2), transparent 70%), linear-gradient(180deg, rgba(255,255,255,.0), rgba(14,165,233,.06))'
+          }
+        }
+      },
+      darkMode: 'class'
+    }
+  </script>
+
+  <style>
+    /* ลด motion สำหรับผู้ใช้ที่ไม่ต้องการ animation */
+    @media (prefers-reduced-motion: reduce) {
+      .motion-safe\:animate-none { animation: none !important; }
+      .transition { transition: none !important; }
+    }
+  </style>
+</head>
+<body class="antialiased text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-950">
+  <a href="#upload" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 bg-sky-600 text-white px-3 py-2 rounded-md">ข้ามไปยังส่วนอัปโหลด</a>
+
+  <!-- NAVBAR -->
+  <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-slate-950/50 border-b border-slate-200/60 dark:border-slate-800/60">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-emerald-500 text-white shadow-glow">
+          <!-- โลโก้แบบ SVG เมล็ดถั่ว -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="drop-shadow">
+            <path d="M12 3c4.5 0 9 3.5 9 8.7 0 5.2-4.5 8.7-9 8.7S3 17 3 11.7C3 6.5 7.5 3 12 3Z" class="fill-emerald-300/90 dark:fill-emerald-400/90"/>
+            <path d="M10.5 12.2c0-2.3 1.2-4.2 3.2-5.3a.8.8 0 0 1 1 .3c1 1.5 1.5 3 .9 4.7-.6 1.7-2 2.8-4.1 3.3-.6.1-1-.3-1-.9V12.2Z" class="fill-emerald-900/50 dark:fill-emerald-950/70"/>
+          </svg>
+        </div>
+        <span class="font-semibold tracking-tight text-lg">SoySelect<span class="text-sky-600">.AI</span></span>
+        <span class="hidden md:inline text-xs px-2 py-1 rounded-full bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300">เดโม</span>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#features" class="hover:text-sky-600">คุณสมบัติ</a>
+        <a href="#how" class="hover:text-sky-600">วิธีทำงาน</a>
+        <a href="#metrics" class="hover:text-sky-600">สมรรถนะ</a>
+        <a href="#faq" class="hover:text-sky-600">FAQ</a>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <button id="themeToggle" type="button" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 px-3 py-2 text-sm hover:bg-slate-100/70 dark:hover:bg-slate-800/70" aria-label="สลับโหมดสี">
+          <svg class="h-4 w-4 hidden dark:block" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.64 13A9 9 0 1111 2.36 7 7 0 0021.64 13z"/></svg>
+          <svg class="h-4 w-4 dark:hidden" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 18a6 6 0 100-12 6 6 0 000 12zm0 4a1 1 0 011 1v1h-2v-1a1 1 0 011-1zm0-22a1 1 0 011-1V-1h-2v1a1 1 0 011 1zm10 10a1 1 0 011 1h1v-2h-1a1 1 0 01-1 1zM1 12a1 1 0 01-1-1H-1v2H0a1 1 0 011-1zM4.22 19.78a1 1 0 010 1.41l-.71.71-1.41-1.41.71-.71a1 1 0 011.41 0zM19.78 4.22a1 1 0 011.41 0l.71.71-1.41 1.41-.71-.71a1 1 0 010-1.41zM4.22 4.22a1 1 0 00-1.41 0l-.71.71L3.5 7.06l.71-.71a1 1 0 000-1.41zM19.78 19.78a1 1 0 00-1.41 0l-.71.71L19.06 22.7l.71-.71a1 1 0 000-1.41z"/></svg>
+          <span class="hidden sm:inline">โหมด</span>
+        </button>
+        <a href="#upload" class="rounded-xl bg-sky-600 text-white px-3 py-2 text-sm font-medium hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600">ทดลองอัปโหลด</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="bg-hero">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
+      <div class="grid lg:grid-cols-2 gap-10 items-center">
+        <div>
+          <p class="inline-flex items-center gap-2 text-xs px-2.5 py-1.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">รุ่นเดโม • ไม่เก็บข้อมูลผู้ใช้</p>
+          <h1 class="mt-5 text-4xl/tight md:text-5xl/tight font-extrabold tracking-tight">
+            คัดเลือก<strong class="bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">เมล็ดถั่วเหลือง</strong>ด้วย AI
+          </h1>
+          <p class="mt-4 text-slate-600 dark:text-slate-300 text-base md:text-lg max-w-prose">อัปโหลดภาพเมล็ดหรือถาดคัดแยก ระบบจะจำลองผลลัพธ์การจำแนกคุณภาพและตำหนิ พร้อมแสดงคะแนนความมั่นใจและคำแนะนำขั้นต่อไป</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="#upload" class="rounded-xl bg-sky-600 text-white px-4 py-2.5 text-sm font-semibold shadow-glow hover:shadow-none hover:bg-sky-500">เริ่มทดลองทันที</a>
+            <a href="#how" class="rounded-xl border border-slate-300 dark:border-slate-700 px-4 py-2.5 text-sm hover:bg-slate-50 dark:hover:bg-slate-800">ดูวิธีทำงาน</a>
+          </div>
+          <dl id="metrics" class="mt-10 grid grid-cols-3 gap-4 text-center">
+            <div class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
+              <dt class="text-xs text-slate-500">ความหน่วงจำลอง</dt>
+              <dd class="mt-1 text-xl font-bold">~120 ms</dd>
+            </div>
+            <div class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
+              <dt class="text-xs text-slate-500">รองรับไฟล์</dt>
+              <dd class="mt-1 text-xl font-bold">JPG • PNG</dd>
+            </div>
+            <div class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
+              <dt class="text-xs text-slate-500">ความละเอียดแนะนำ</dt>
+              <dd class="mt-1 text-xl font-bold">≥ 720p</dd>
+            </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="py-16">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl">
+        <h2 class="text-2xl md:text-3xl font-bold">จุดเด่นที่ออกแบบเพื่อ <span class="text-sky-600">ประสิทธิภาพสูง</span></h2>
+        <p class="mt-3 text-slate-600 dark:text-slate-300">โฟกัสที่ความเร็ว, ความง่ายในการใช้งาน และความพร้อมต่อการนำไปใช้จริงในไลน์คัดแยก</p>
+      </div>
+      <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Feature card template -->
+        <article class="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 bg-white/40 dark:bg-slate-900/40">
+          <div class="w-10 h-10 grid place-items-center rounded-xl bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M12 3l9 6-9 6-9-6 9-6zm0 9l9 6-9 6-9-6 9-6z"/></svg>
+          </div>
+          <h3 class="mt-4 font-semibold">ออกแบบให้โหลดไว</h3>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">ใช้ SVG/ระบบฟอนต์ของเครื่อง, lazy-loading, และโค้ด JS น้อย เพื่อลด TTI และ CLS</p>
+        </article>
+        <article class="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 bg-white/40 dark:bg-slate-900/40">
+          <div class="w-10 h-10 grid place-items-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h10v2H4v-2z"/></svg>
+          </div>
+          <h3 class="mt-4 font-semibold">ข้อมูลเชิงลึกพร้อมใช้</h3>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">ตารางสรุปผลการคัด, สถิติความมั่นใจ, อัตราคัดทิ้ง/ผ่าน สำหรับ QC</p>
+        </article>
+        <article class="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 bg-white/40 dark:bg-slate-900/40">
+          <div class="w-10 h-10 grid place-items-center rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M12 2l4 7h7l-5.5 4 2.5 7-6-4-6 4 2.5-7L1 9h7l4-7z"/></svg>
+          </div>
+          <h3 class="mt-4 font-semibold">รองรับหน้างาน</h3>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">ดีไซน์ปุ่มใหญ่ ใช้งานจอสัมผัสได้ดี เหมาะกับไลน์คัดแยกหรือโรงงาน</p>
+        </article>
+        <article class="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 bg-white/40 dark:bg-slate-900/40">
+          <div class="w-10 h-10 grid place-items-center rounded-xl bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M12 1a4 4 0 014 4v3h3a4 4 0 014 4v7a4 4 0 01-4 4H9a4 4 0 01-4-4v-3H2a1 1 0 01-1-1V8a4 4 0 014-4h3V5a4 4 0 004-4z"/></svg>
+          </div>
+          <h3 class="mt-4 font-semibold">ความเป็นส่วนตัว</h3>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">ทุกอย่างประมวลผลฝั่งผู้ใช้ในเดโมนี้ ไม่มีการอัปโหลดไฟล์ขึ้นเซิร์ฟเวอร์</p>
+        </article>
+        <article class="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 bg-white/40 dark:bg-slate-900/40">
+          <div class="w-10 h-10 grid place-items-center rounded-xl bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M5 3h14a2 2 0 012 2v14l-4-3H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>
+          </div>
+          <h3 class="mt-4 font-semibold">พร้อมต่อยอด API</h3>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">โครงหน้าบ้านแยกชัดเจน รองรับการเชื่อมต่อ API inferencing ได้ในอนาคต</p>
+        </article>
+        <article class="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 bg-white/40 dark:bg-slate-900/40">
+          <div class="w-10 h-10 grid place-items-center rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-800/60 dark:text-slate-200">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M3 12l5 5L21 4l-2-2-11 11-3-3-2 2z"/></svg>
+          </div>
+          <h3 class="mt-4 font-semibold">เข้าถึงได้ (A11y)</h3>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">ใช้ semantic HTML, ป้ายกำกับชัดเจน, รองรับคีย์บอร์ด และสกรีนรีดเดอร์</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="py-16 bg-slate-50/60 dark:bg-slate-900/40">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <h2 class="text-2xl md:text-3xl font-bold">ทำงานอย่างไร</h2>
+        <p class="mt-3 text-slate-600 dark:text-slate-300">สำหรับโปรดักชันจริง มักใช้สายพาน + กล้อง + โมเดล CNN/Transformer ตรวจจับตำหนิ (เชื้อรา, แตกหัก, สีผิดปกติ) จากนั้นคัดแยกด้วยโซลินอยด์ลม/แขนกล</p>
+      </div>
+      <div class="mt-10 grid gap-6 md:grid-cols-3">
+        <div class="rounded-2xl p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+          <div class="w-10 h-10 grid place-items-center rounded-xl bg-slate-100 dark:bg-slate-800/60">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor"><path d="M4 5h16v14H4V5zm2 2v10h12V7H6z"/></svg>
+          </div>
+          <h3 class="mt-4 font-semibold">1) ถ่ายภาพ</h3>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">แสงสม่ำเสมอ ฉากหลังตัดกัน (เช่น สีดำ/ขาว) ลดเงาและสะท้อนแสง</p>
+        </div>
+        <div class="rounded-2xl p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+          <div class="w-10 h-10 grid place-items-center rounded-xl bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 4l7.5 13h-15L12 6z"/></svg>
+          </div>
+          <h3 class="mt-4 font-semibold">2) วิเคราะห์ด้วย AI</h3>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">จำแนก <em>ผ่าน/ไม่ผ่าน</em>, โลเคชันตำหนิ และคะแนนความมั่นใจ</p>
+        </div>
+        <div class="rounded-2xl p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+          <div class="w-10 h-10 grid place-items-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor"><path d="M3 12h18v2H3v-2zm0 4h12v2H3v-2zm0-8h18v2H3V8z"/></svg>
+          </div>
+          <h3 class="mt-4 font-semibold">3) คัดแยกอัตโนมัติ</h3>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">เชื่อม PLC/หุ่นยนต์ สั่งดีดเมล็ดที่ไม่ผ่านออกจากสายพาน</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- UPLOAD / DEMO -->
+<section id="upload" class="py-16">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl">
+      <h2 class="text-2xl md:text-3xl font-bold">ทดลองอัปโหลดภาพเมล็ด</h2>
+      <p class="mt-3 text-slate-600 dark:text-slate-300">ระบบจะประมวลผลด้วย AI จริง</p>
+    </div>
+
+    <!-- ฟอร์มอัปโหลด -->
+    <form method="POST" enctype="multipart/form-data"
+        class="mt-6 lg:col-span-1 group rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 p-6 text-center">
+    
+    <img id="previewImg" class="mx-auto mt-4 max-h-48 rounded-xl hidden" alt="พรีวิวภาพ" />
+
+    <svg id="uploadIcon" viewBox="0 0 24 24" class="mx-auto w-10 h-10 text-slate-400" fill="currentColor">
+    <path d="M12 2l4 4h-3v7h-2V6H8l4-4zM5 20h14v-2H5v2z"/>
+    </svg>
+
+    <p id="fileHint" class="mt-3 font-medium">เลือกไฟล์ภาพ</p>
+
+    <input type="file" name="file" accept="image/*" required
+        id="fileInput"
+        class="mt-2 cursor-pointer rounded-xl bg-sky-600 text-white px-4 py-2 text-sm font-semibold hover:bg-sky-500" />
+    <p class="mt-2 text-xs text-slate-500">รองรับ JPG/PNG สูงสุด ~10MB</p>
+
+    <div class="mt-4 flex gap-3 justify-center">
+        <button id="analyzeBtn" type="button"
+                class="rounded-xl bg-sky-600 text-white px-4 py-2 text-sm font-semibold hover:bg-sky-500">
+        วิเคราะห์
+        </button>
+    </div>
+    </form>
+
+
+    <!-- ผลลัพธ์ -->
+    <div id="results" class="mt-8 lg:col-span-2">
+    {% if prediction %}
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
+        <h3 class="font-semibold mb-3">ผลลัพธ์</h3>
+        <p class="text-lg font-bold text-sky-600">{{ prediction }}</p>
+    </div>
+    {% endif %}
+    </div>
+
+    <table id="summaryTable" class="mt-4 w-full text-left border-collapse">
+    <thead>
+        <tr class="border-b border-slate-300 dark:border-slate-700">
+        <th class="p-2">ประเภทเมล็ด</th>
+        <th class="p-2">เปอร์เซ็นต์</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+    </table>
+
+</section>
+
+<!-- ใส่ script ที่ท้าย body -->
+<script src="static/js/script.js"></script>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-16 bg-slate-50/60 dark:bg-slate-900/40">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl md:text-3xl font-bold">คำถามที่พบบ่อย</h2>
+      <div class="mt-6 space-y-4">
+        <details class="group rounded-2xl border border-slate-200 dark:border-slate-800 p-5">
+          <summary class="cursor-pointer font-medium flex items-center justify-between">เดโมนี้ใช้ AI จริงหรือไม่?
+            <span class="ml-3 text-slate-400 group-open:rotate-180 transition"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5H7z"/></svg></span>
+          </summary>
+          <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">เป็นการจำลองฝั่งหน้าเว็บเพื่อสาธิต UI/UX เท่านั้น สำหรับระบบจริงควรเชื่อมต่อ API โมเดล (เช่น ONNX/TensorRT/TF Serving) ผ่าน HTTPS</p>
+        </details>
+        <details class="group rounded-2xl border border-slate-200 dark:border-slate-800 p-5">
+          <summary class="cursor-pointer font-medium flex items-center justify-between">รองรับการใช้งานในโรงงานอย่างไร?
+            <span class="ml-3 text-slate-400 group-open:rotate-180 transition"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5H7z"/></svg></span>
+          </summary>
+          <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">ปรับ UI ให้คอนทราสต์สูง ปุ่มใหญ่ และเพิ่มโหมดออฟไลน์ + PWA เพื่อลดการพึ่งพาเครือข่าย</p>
+        </details>
+        <details class="group rounded-2xl border border-slate-200 dark:border-slate-800 p-5">
+          <summary class="cursor-pointer font-medium flex items-center justify-between">ความเป็นส่วนตัวของรูปภาพ?
+            <span class="ml-3 text-slate-400 group-open:rotate-180 transition"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5H7z"/></svg></span>
+          </summary>
+          <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">เดโมนี้ประมวลผลในเบราว์เซอร์ ไม่ส่งไฟล์ไปที่เซิร์ฟเวอร์ และสามารถกด “ล้างทั้งหมด” เพื่อลบข้อมูลจากหน้านี้ได้ทันที</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-10">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm text-slate-500 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p>© <span id="year"></span> SoySelect.AI — เดโมออกแบบด้วย HTML + Tailwind</p>
+      <div class="flex items-center gap-3">
+        <a href="#" class="hover:text-sky-600">ข้อกำหนดการใช้งาน</a>
+        <span aria-hidden="true">•</span>
+        <a href="#" class="hover:text-sky-600">นโยบายความเป็นส่วนตัว</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Minimal JS เพื่อเดโมที่รวดเร็วและเข้าถึงได้ง่าย -->
+  <script defer>
+    const root = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const results = document.getElementById('results');
+    const clearBtn = document.getElementById('clearBtn');
+    const announce = document.getElementById('announce');
+    const summaryTableBody = document.querySelector('#summaryTable tbody');
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // THEME
+    const stored = localStorage.getItem('theme');
+    if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+    themeToggle?.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>
