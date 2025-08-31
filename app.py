@@ -38,5 +38,7 @@ def predict():
     })
 
 if __name__ == "__main__":
+    # ใช้ port จาก environment variable ของ Render หรือ default 8080
+    port = int(os.environ.get("PORT", 8080))
     from waitress import serve
-    serve(app, host="0.0.0.0", port=8080)
+    serve(app, host="0.0.0.0", port=port)
