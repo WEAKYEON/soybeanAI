@@ -206,9 +206,12 @@
       <p class="mt-3 text-slate-600 dark:text-slate-300">ระบบจะประมวลผลด้วย AI จริง</p>
     </div>
 
-    <!-- ฟอร์มอัปโหลด -->
-    <form method="POST" enctype="multipart/form-data"
-        class="mt-6 lg:col-span-1 group rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 p-6 text-center">
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+      <!-- INPUT: อยู่ซ้าย -->
+      <div class="md:col-span-4 md:sticky top-24">
+        <!-- ฟอร์มอัปโหลด -->
+        <form method="POST" enctype="multipart/form-data"
+            class="group rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 p-6 text-center">
     
     <img id="previewImg" class="mx-auto mt-4 max-h-48 rounded-xl hidden" alt="พรีวิวภาพ" />
 
@@ -228,21 +231,23 @@
                 class="rounded-xl bg-sky-600 text-white px-4 py-2 text-sm font-semibold hover:bg-sky-500">
         วิเคราะห์
         </button>
-    </div>
-    </form>
+        </div>
+        </form>
+      </div>
 
-
-    <!-- ผลลัพธ์ -->
-    <div id="results" class="mt-8 lg:col-span-2">
+      <!-- OUTPUT: อยู่ขวา -->
+      <div class="md:col-span-8">
+        <!-- ผลลัพธ์ -->
+        <div id="results" class="mt-0">
     {% if prediction %}
     <div class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
         <h3 class="font-semibold mb-3">ผลลัพธ์</h3>
         <p class="text-lg font-bold text-sky-600">{{ prediction }}</p>
     </div>
     {% endif %}
-    </div>
+        </div>
 
-    <table id="summaryTable" class="mt-4 w-full text-left border-collapse">
+        <table id="summaryTable" class="mt-4 w-full text-left border-collapse">
     <thead>
         <tr class="border-b border-slate-300 dark:border-slate-700">
         <th class="p-2">ประเภทเมล็ด</th>
@@ -250,7 +255,9 @@
         </tr>
     </thead>
     <tbody></tbody>
-    </table>
+        </table>
+      </div>
+    </div>
 
 </section>
 
