@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // --- Element ฝั่งอัปโหลดและแสดงผลเดิม ---
   const fileInput = document.querySelector('input[type="file"]');
   const fileNameSpan = document.getElementById("fileName");
   const analyzeBtn = document.getElementById("analyzeBtn");
@@ -13,6 +14,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const modeButtons = document.querySelectorAll(".mode-btn");
   const modelModeInput = document.getElementById("modelModeInput");
 
+  // --- Element ฝั่งกล้อง (ที่เพิ่มเข้ามาใหม่) ---
+  const openCameraBtn = document.getElementById('openCameraBtn');
+  const closeCameraBtn = document.getElementById('closeCameraBtn');
+  const takePhotoBtn = document.getElementById('takePhotoBtn');
+  const cameraUI = document.getElementById('cameraUI');
+  const cameraVideo = document.getElementById('cameraVideo');
+
+  let stream = null; // ตัวแปรเก็บสถานะกล้อง
+
+  // --- ฟังก์ชันช่วยเหลือ (Helpers) ---
   const setProgress = (barEl, percentEl, value) => {
     const clamped = Math.min(100, Math.max(0, value));
     barEl.style.width = `${clamped}%`;
@@ -29,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  // --- การจัดการโหมด (Fast / Slow) ---
   let selectedMode = modelModeInput?.value || "fast";
   setModeButtonStyles(selectedMode);
 
@@ -40,11 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // --- จัดการเมื่อมีการเลือกไฟล์ภาพ (ทั้งจากการเลือกไฟล์ปกติ และจากการถ่ายรูป) ---
   fileInput.addEventListener("change", () => {
     const file = fileInput.files[0];
 
-    // --- 🌟 เริ่มส่วนที่เพิ่ม ---
-    // อัปเดตข้อความ "No file chosen"
+    // อัปเดตข้อความชื่อไฟล์
     if (file) {
       fileNameSpan.textContent = file.name;
     } else {
@@ -59,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // สร้าง Preview รูปภาพ
     const reader = new FileReader();
     reader.onload = (e) => {
       previewImg.src = e.target.result;
@@ -68,6 +81,87 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     reader.readAsDataURL(file);
   });
+
+  // ==========================================
+  // --- ส่วนจัดการระบบกล้อง (Camera Logic) ---
+  // ==========================================
+
+  // ฟังก์ชันปิดกล้อง
+  const stopCamera = () => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+    }
+    if (cameraUI) {
+      cameraUI.classList.add('hidden');
+      cameraUI.classList.remove('flex');
+    }
+    // ถ้ายกเลิกถ่ายกล้อง แล้วยังไม่มีไฟล์รูปเดิมอยู่ ให้แสดงไอคอนอัปโหลดกลับมา
+    if (!fileInput.files || fileInput.files.length === 0) {
+      uploadIcon.classList.remove('hidden');
+      fileHint.classList.remove('hidden');
+      previewImg.classList.add('hidden');
+    } else {
+      previewImg.classList.remove('hidden');
+    }
+  };
+
+  if (openCameraBtn) {
+    openCameraBtn.addEventListener('click', async () => {
+      try {
+        // ขอเปิดกล้องหลัง
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' }
+        });
+        cameraVideo.srcObject = stream;
+
+        // สลับ UI
+        cameraUI.classList.remove('hidden');
+        cameraUI.classList.add('flex');
+        previewImg.classList.add('hidden');
+        uploadIcon.classList.add('hidden');
+        fileHint.classList.add('hidden');
+      } catch (err) {
+        alert("ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาตใช้งานกล้อง (Camera Permissions)");
+        console.error("Camera error:", err);
+      }
+    });
+  }
+
+  if (closeCameraBtn) {
+    closeCameraBtn.addEventListener('click', stopCamera);
+  }
+
+  if (takePhotoBtn) {
+    takePhotoBtn.addEventListener('click', () => {
+      // 1. วาดภาพลง Canvas
+      const canvas = document.createElement('canvas');
+      canvas.width = cameraVideo.videoWidth;
+      canvas.height = cameraVideo.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(cameraVideo, 0, 0, canvas.width, canvas.height);
+
+      // 2. แปลง Canvas เป็นไฟล์ Blob (JPEG)
+      canvas.toBlob((blob) => {
+        const file = new File([blob], "camera_capture.jpg", { type: "image/jpeg" });
+
+        // 3. ยัดไฟล์ลงใน <input type="file"> ด้วย DataTransfer
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+
+        // 4. สั่ง Trigger Event 'change' เพื่อให้ระบบพรีวิวเดิมทำงานอัตโนมัติ
+        fileInput.dispatchEvent(new Event('change'));
+
+        // 5. ปิดกล้อง
+        stopCamera();
+      }, 'image/jpeg', 0.9);
+    });
+  }
+
+  // ==========================================
+  // --- ส่วนส่งข้อมูลไป Backend (AJAX/XHR) ---
+  // ==========================================
 
   // สร้าง element สำหรับผลลัพธ์
   let resultDiv = document.getElementById("predictionResult");
@@ -82,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
   analyzeBtn.addEventListener("click", () => {
     const file = fileInput.files[0];
     if (!file) {
-      alert("Please upload an image first.");
+      alert("Please upload an image or take a photo first.");
       return;
     }
 
@@ -142,24 +236,25 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      summaryTableBody.innerHTML = "";
-
-      Object.entries(data.percentages).forEach(([cls, pct]) => {
-        const width = Math.min(100, Math.max(0, pct));
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td class="p-2 border-b border-slate-200 dark:border-slate-700">${cls}</td>
-          <td class="p-2 border-b border-slate-200 dark:border-slate-700">
-            <div class="flex items-center justify-between text-xs font-semibold text-slate-600 dark:text-slate-300">
-              <span>${pct.toFixed(2)}%</span>
-            </div>
-            <div class="mt-1 h-2 w-full rounded-full bg-slate-200 dark:bg-slate-800">
-              <div class="h-2 rounded-full bg-gradient-to-r from-sky-500 to-violet-500" style="width:${width}%"></div>
-            </div>
-          </td>
-        `;
-        summaryTableBody.appendChild(tr);
-      });
+      if (summaryTableBody) {
+        summaryTableBody.innerHTML = "";
+        Object.entries(data.percentages).forEach(([cls, pct]) => {
+          const width = Math.min(100, Math.max(0, pct));
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+              <td class="p-2 border-b border-slate-200 dark:border-slate-700">${cls}</td>
+              <td class="p-2 border-b border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between text-xs font-semibold text-slate-600 dark:text-slate-300">
+                  <span>${pct.toFixed(2)}%</span>
+                </div>
+                <div class="mt-1 h-2 w-full rounded-full bg-slate-200 dark:bg-slate-800">
+                  <div class="h-2 rounded-full bg-gradient-to-r from-sky-500 to-violet-500" style="width:${width}%"></div>
+                </div>
+              </td>
+            `;
+          summaryTableBody.appendChild(tr);
+        });
+      }
 
       const modeLabel = data.mode === "slow" ? "Slow (Detailed)" : "Fast (Realtime)";
       resultDiv.textContent = `${modeLabel}: ${data.prediction}`;
