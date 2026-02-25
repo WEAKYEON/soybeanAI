@@ -14,6 +14,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const modeButtons = document.querySelectorAll(".mode-btn");
   const modelModeInput = document.getElementById("modelModeInput");
 
+  // --- คำอธิบายผลลัพธ์แต่ละประเภทเมล็ด ---
+  const seedDescriptions = {
+    "Broken": {
+      emoji: "💔",
+      title: "Broken — เมล็ดแตกหัก (Broken Seeds)",
+      text: "เมล็ดถั่วเหลืองที่มีการแตกหัก บิ่น หรือสูญเสียรูปทรงดั้งเดิม มักเกิดจากการปฏิบัติงานในขั้นตอนการเก็บเกี่ยว การสี หรือการขนส่งที่ไม่ระมัดระวังเพียงพอ เมล็ดในกลุ่มนี้จะมีการเสื่อมคุณภาพอย่างรวดเร็วเนื่องจากเนื้อเยื่อภายในสัมผัสกับอากาศ ส่งผลให้เกิดปฏิกิริยาออกซิเดชันและลดอายุการเก็บรักษา แม้ไม่เหมาะสมสำหรับใช้เป็นเมล็ดพันธุ์หรือการบริโภคโดยตรง แต่ยังคงสามารถนำไปใช้ในอุตสาหกรรมสกัดน้ำมันหรือแปรรูปเป็นวัตถุดิบอาหารสัตว์ได้"
+    },
+    "Immature": {
+      emoji: "🌱",
+      title: "Immature — เมล็ดยังไม่สุก (Immature Seeds)",
+      text: "เมล็ดถั่วเหลืองที่ถูกเก็บเกี่ยวก่อนที่จะเจริญเติบโตเต็มที่ ลักษณะทางกายภาพมักมีขนาดเล็ก น้ำหนักเบา และมีสีเขียวหรือสีซีดกว่าเมล็ดที่สมบูรณ์ โครงสร้างทางเคมีของเมล็ดในกลุ่มนี้จะมีสัดส่วนของโปรตีนและไขมันต่ำกว่าเกณฑ์มาตรฐาน ซึ่งส่งผลโดยตรงต่อคุณภาพและอัตราผลผลิตในการนำไปแปรรูป และมักไม่ผ่านเกณฑ์มาตรฐานสำหรับการส่งออกหรือการใช้เป็นเมล็ดพันธุ์"
+    },
+    "Intact": {
+      emoji: "✅",
+      title: "Intact — เมล็ดสมบูรณ์ (Intact Seeds)",
+      text: "เมล็ดถั่วเหลืองที่มีความสมบูรณ์สูงทั้งทางกายภาพและคุณภาพ ไม่มีร่องรอยการแตกหัก ความเสียหายจากการกระแทก หรือการติดเชื้อ มีสีสันสม่ำเสมอและรูปทรงตามลักษณะสายพันธุ์ เมล็ดในกลุ่มนี้จัดอยู่ในระดับคุณภาพสูงสุด (Premium Quality) ซึ่งมีความเหมาะสมอย่างยิ่งสำหรับการเพาะปลูก การส่งออกเชิงพาณิชย์ รวมถึงการแปรรูปเป็นผลิตภัณฑ์อาหารสำหรับมนุษย์ระดับพรีเมียม (เต้าหู้, นมถั่วเหลือง)"
+    },
+    "Skin-damaged": {
+      emoji: "🧴",
+      title: "Skin-damaged — เมล็ดเปลือกเสียหาย (Skin-damaged Seeds)",
+      text: "เมล็ดถั่วเหลืองที่มีร่องรอยความเสียหายบริเวณเปลือกหุ้มเมล็ด เช่น รอยขีดข่วน ถลอก หรือหลุดลอก ซึ่งอาจเป็นผลกระทบจากการเข้าทำลายของแมลง การขัดสีในระบบสายพานลำเลียง หรือการจัดเก็บในสภาวะความชื้นที่ไม่เหมาะสม การสูญเสียเปลือกป้องกันตามธรรมชาติทำให้เมล็ดมีความเสี่ยงสูงต่อการเข้าทำลายของเชื้อราและแบคทีเรีย รวมทั้งทำให้คุณภาพเสื่อมสภาพในอัตราที่เร่งขึ้น"
+    },
+    "Spotted": {
+      emoji: "🔴",
+      title: "Spotted — เมล็ดมีรอยด่างจุด (Spotted Seeds)",
+      text: "เมล็ดถั่วเหลืองที่ปรากฏรอยด่าง จุดสีดำ จุดสีน้ำตาล หรือความผิดปกติของเม็ดสีบนเปลือกเมล็ด สาเหตุหลักมักเกิดจากการติดเชื้อทางพยาธิวิทยา เช่น เชื้อรากลุ่ม Cercospora หรือ Phomopsis รวมถึงการเข้าทำลายของแมลงกัดเจาะ การปรากฏของจุดเหล่านี้บ่งชี้ถึงการปนเปื้อนทางชีวภาพซึ่งส่งผลกระทบโดยตรงต่อมาตรฐานความปลอดภัยด้านอาหาร ลดมูลค่าเชิงพาณิชย์ของผลผลิต และจำเป็นต้องถูกคัดแยกออก"
+    }
+  };
+
   // --- Element ฝั่งกล้อง (ที่เพิ่มเข้ามาใหม่) ---
   const openCameraBtn = document.getElementById('openCameraBtn');
   const closeCameraBtn = document.getElementById('closeCameraBtn');
@@ -362,6 +391,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const modeLabel = data.mode === "slow" ? "Slow (Detailed)" : "Fast (Realtime)";
       resultDiv.textContent = `${modeLabel}: ${data.prediction}`;
+
+      // --- แสดงคำอธิบายผลลัพธ์ ---
+      const descContainer = document.getElementById("resultDescription");
+      const descEmoji = document.getElementById("descEmoji");
+      const descTitle = document.getElementById("descTitle");
+      const descText = document.getElementById("descText");
+
+      if (descContainer && descEmoji && descTitle && descText) {
+        const info = seedDescriptions[data.prediction];
+        if (info) {
+          descEmoji.textContent = info.emoji;
+          descTitle.textContent = info.title;
+          descText.textContent = info.text;
+          descContainer.classList.remove("hidden");
+          descContainer.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        } else {
+          descContainer.classList.add("hidden");
+        }
+      }
     };
 
     xhr.send(formData);
