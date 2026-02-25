@@ -52,6 +52,110 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // ==========================================
+  // --- Drag and Drop Logic (Global) ---
+  // ==========================================
+  const dropzone = document.getElementById("dropzone");
+
+  if (dropzone) {
+    let dragCounter = 0;
+
+    // ป้องกัน browser เปิดไฟล์เอง
+    ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+      document.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }, false);
+    });
+
+    // ไฮไลท์กรอบเมื่อลากไฟล์เข้ามา
+    document.addEventListener("dragenter", () => {
+      dragCounter++;
+      dropzone.classList.add("border-sky-500", "bg-sky-50/80");
+      dropzone.classList.remove("border-slate-300", "dark:border-slate-700");
+    }, false);
+
+    // ลบไฮไลท์เมื่อลากไฟล์ออก
+    document.addEventListener("dragleave", () => {
+      dragCounter--;
+      if (dragCounter <= 0) {
+        dragCounter = 0;
+        dropzone.classList.remove("border-sky-500", "bg-sky-50/80");
+        dropzone.classList.add("border-slate-300", "dark:border-slate-700");
+      }
+    }, false);
+
+    // เมื่อปล่อยไฟล์ลงมา
+    document.addEventListener("drop", (e) => {
+      dragCounter = 0;
+      dropzone.classList.remove("border-sky-500", "bg-sky-50/80");
+      dropzone.classList.add("border-slate-300", "dark:border-slate-700");
+
+      const dt = e.dataTransfer;
+      const files = dt.files;
+
+      if (files && files.length > 0) {
+        // เอาแค่ไฟล์แรกที่เป็นรูปภาพ
+        const file = files[0];
+        if (file.type.startsWith("image/")) {
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(file);
+          fileInput.files = dataTransfer.files;
+          fileInput.dispatchEvent(new Event("change"));
+        } else {
+          alert("Please drop an image file (JPG/PNG).");
+        }
+      }
+    }, false);
+  }
+
+  // ==========================================
+  // --- Copy/Paste Logic (Global + Input) ---
+  // ==========================================
+  const pasteInputEl = document.getElementById("pasteInput");
+
+  const handlePaste = (e) => {
+    const clipboardData = e.clipboardData || window.clipboardData;
+    if (!clipboardData) return;
+
+    const items = clipboardData.items;
+    let imageFile = null;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.kind === "file" && item.type.startsWith("image/")) {
+        imageFile = item.getAsFile();
+        break;
+      }
+    }
+
+    if (imageFile) {
+      e.preventDefault();
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(imageFile);
+      fileInput.files = dataTransfer.files;
+      fileInput.dispatchEvent(new Event("change"));
+
+      // แสดง feedback ที่ช่อง paste
+      if (pasteInputEl) {
+        pasteInputEl.value = "✅ Image pasted!";
+        pasteInputEl.classList.add("border-emerald-500", "bg-emerald-50");
+        setTimeout(() => {
+          pasteInputEl.value = "";
+          pasteInputEl.classList.remove("border-emerald-500", "bg-emerald-50");
+        }, 2000);
+      }
+    }
+  };
+
+  // ฟังก์ชัน paste ทำงานได้ทั้งหน้าเว็บ
+  document.addEventListener("paste", handlePaste);
+
+  // คลิกที่กล่อง paste เพื่อ focus (ให้ Ctrl+V ทำงาน)
+  if (pasteInputEl) {
+    pasteInputEl.addEventListener("click", () => pasteInputEl.focus());
+  }
+
   // --- จัดการเมื่อมีการเลือกไฟล์ภาพ (ทั้งจากการเลือกไฟล์ปกติ และจากการถ่ายรูป) ---
   fileInput.addEventListener("change", () => {
     const file = fileInput.files[0];
