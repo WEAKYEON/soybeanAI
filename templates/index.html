@@ -1,13 +1,16 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth" data-color-mode>
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SoySelect.AI — Soybean seed demo with AI</title>
-  <meta name="description" content="A high-speed web demo for soybean seed selection with AI: upload images, simulate analysis results, beautiful UI with TailwindCSS."> 
+  <meta name="description"
+    content="A high-speed web demo for soybean seed selection with AI: upload images, simulate analysis results, beautiful UI with TailwindCSS.">
   <meta name="theme-color" content="#0ea5e9" />
   <meta property="og:title" content="SoySelect.AI — Soybean seed selection demo with AI" />
-  <meta property="og:description" content="Upload seed images, simulate AI classification, beautiful design, high performance" />
+  <meta property="og:description"
+    content="Upload seed images, simulate AI classification, beautiful design, high performance" />
   <meta property="og:type" content="website" />
 
   <!-- Tailwind CDN (for prototype/demo). For production, use JIT build to reduce CSS size. -->
@@ -38,27 +41,41 @@
   <style>
     /* Reduce motion for users who prefer less animation */
     @media (prefers-reduced-motion: reduce) {
-      .motion-safe\:animate-none { animation: none !important; }
-      .transition { transition: none !important; }
+      .motion-safe\:animate-none {
+        animation: none !important;
+      }
+
+      .transition {
+        transition: none !important;
+      }
     }
   </style>
 </head>
+
 <body class="antialiased text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-950">
-  <a href="#upload" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 bg-sky-600 text-white px-3 py-2 rounded-md">Skip to upload section</a>
+  <a href="#upload"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 bg-sky-600 text-white px-3 py-2 rounded-md">Skip
+    to upload section</a>
 
   <!-- NAVBAR -->
-  <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-slate-950/50 border-b border-slate-200/60 dark:border-slate-800/60">
+  <header
+    class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-slate-950/50 border-b border-slate-200/60 dark:border-slate-800/60">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-emerald-500 text-white shadow-glow">
+        <div
+          class="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-emerald-500 text-white shadow-glow">
           <!-- SVG logo: soybean seed -->
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="drop-shadow">
-            <path d="M12 3c4.5 0 9 3.5 9 8.7 0 5.2-4.5 8.7-9 8.7S3 17 3 11.7C3 6.5 7.5 3 12 3Z" class="fill-emerald-300/90 dark:fill-emerald-400/90"/>
-            <path d="M10.5 12.2c0-2.3 1.2-4.2 3.2-5.3a.8.8 0 0 1 1 .3c1 1.5 1.5 3 .9 4.7-.6 1.7-2 2.8-4.1 3.3-.6.1-1-.3-1-.9V12.2Z" class="fill-emerald-900/50 dark:fill-emerald-950/70"/>
+            <path d="M12 3c4.5 0 9 3.5 9 8.7 0 5.2-4.5 8.7-9 8.7S3 17 3 11.7C3 6.5 7.5 3 12 3Z"
+              class="fill-emerald-300/90 dark:fill-emerald-400/90" />
+            <path
+              d="M10.5 12.2c0-2.3 1.2-4.2 3.2-5.3a.8.8 0 0 1 1 .3c1 1.5 1.5 3 .9 4.7-.6 1.7-2 2.8-4.1 3.3-.6.1-1-.3-1-.9V12.2Z"
+              class="fill-emerald-900/50 dark:fill-emerald-950/70" />
           </svg>
         </div>
         <span class="font-semibold tracking-tight text-lg">SoySelect<span class="text-sky-600">.AI</span></span>
-        <span class="hidden md:inline text-xs px-2 py-1 rounded-full bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300">Demo</span>
+        <span
+          class="hidden md:inline text-xs px-2 py-1 rounded-full bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300">Demo</span>
       </div>
 
       <nav class="hidden md:flex items-center gap-6 text-sm">
@@ -69,12 +86,21 @@
       </nav>
 
       <div class="flex items-center gap-2">
-        <button id="themeToggle" type="button" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 px-3 py-2 text-sm hover:bg-slate-100/70 dark:hover:bg-slate-800/70" aria-label="Toggle color mode">
-          <svg class="h-4 w-4 hidden dark:block" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.64 13A9 9 0 1111 2.36 7 7 0 0021.64 13z"/></svg>
-          <svg class="h-4 w-4 dark:hidden" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 18a6 6 0 100-12 6 6 0 000 12zm0 4a1 1 0 011 1v1h-2v-1a1 1 0 011-1zm0-22a1 1 0 011-1V-1h-2v1a1 1 0 011 1zm10 10a1 1 0 011 1h1v-2h-1a1 1 0 01-1 1zM1 12a1 1 0 01-1-1H-1v2H0a1 1 0 011-1zM4.22 19.78a1 1 0 010 1.41l-.71.71-1.41-1.41.71-.71a1 1 0 011.41 0zM19.78 4.22a1 1 0 011.41 0l.71.71-1.41 1.41-.71-.71a1 1 0 010-1.41zM4.22 4.22a1 1 0 00-1.41 0l-.71.71L3.5 7.06l.71-.71a1 1 0 000-1.41zM19.78 19.78a1 1 0 00-1.41 0l-.71.71L19.06 22.7l.71-.71a1 1 0 000-1.41z"/></svg>
+        <button id="themeToggle" type="button"
+          class="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 px-3 py-2 text-sm hover:bg-slate-100/70 dark:hover:bg-slate-800/70"
+          aria-label="Toggle color mode">
+          <svg class="h-4 w-4 hidden dark:block" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M21.64 13A9 9 0 1111 2.36 7 7 0 0021.64 13z" />
+          </svg>
+          <svg class="h-4 w-4 dark:hidden" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path
+              d="M12 18a6 6 0 100-12 6 6 0 000 12zm0 4a1 1 0 011 1v1h-2v-1a1 1 0 011-1zm0-22a1 1 0 011-1V-1h-2v1a1 1 0 011 1zm10 10a1 1 0 011 1h1v-2h-1a1 1 0 01-1 1zM1 12a1 1 0 01-1-1H-1v2H0a1 1 0 011-1zM4.22 19.78a1 1 0 010 1.41l-.71.71-1.41-1.41.71-.71a1 1 0 011.41 0zM19.78 4.22a1 1 0 011.41 0l.71.71-1.41 1.41-.71-.71a1 1 0 010-1.41zM4.22 4.22a1 1 0 00-1.41 0l-.71.71L3.5 7.06l.71-.71a1 1 0 000-1.41zM19.78 19.78a1 1 0 00-1.41 0l-.71.71L19.06 22.7l.71-.71a1 1 0 000-1.41z" />
+          </svg>
           <span class="hidden sm:inline">Mode</span>
         </button>
-        <a href="#upload" class="rounded-xl bg-sky-600 text-white px-3 py-2 text-sm font-medium hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600">Try Upload</a>
+        <a href="#upload"
+          class="rounded-xl bg-sky-600 text-white px-3 py-2 text-sm font-medium hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600">Try
+          Upload</a>
       </div>
     </div>
   </header>
@@ -84,14 +110,23 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
       <div class="grid lg:grid-cols-2 gap-10 items-center">
         <div>
-          <p class="inline-flex items-center gap-2 text-xs px-2.5 py-1.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">Demo version • No user data stored</p>
+          <p
+            class="inline-flex items-center gap-2 text-xs px-2.5 py-1.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+            Demo version • No user data stored</p>
           <h1 class="mt-5 text-4xl/tight md:text-5xl/tight font-extrabold tracking-tight">
-            Select <strong class="bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">soybean seeds</strong> <span class="whitespace-nowrap">with AI</span>
+            Select <strong class="bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">soybean
+              seeds</strong> <span class="whitespace-nowrap">with AI</span>
           </h1>
-          <p class="mt-4 text-slate-600 dark:text-slate-300 text-base md:text-lg max-w-prose">Upload images of seeds or trays, the system will simulate quality classification and defect detection results, show confidence scores and next-step recommendations.</p>
+          <p class="mt-4 text-slate-600 dark:text-slate-300 text-base md:text-lg max-w-prose">Upload images of seeds or
+            trays, the system will simulate quality classification and defect detection results, show confidence scores
+            and next-step recommendations.</p>
           <div class="mt-6 flex flex-wrap gap-3">
-            <a href="#upload" class="rounded-xl bg-sky-600 text-white px-4 py-2.5 text-sm font-semibold shadow-glow hover:shadow-none hover:bg-sky-500">Try Now</a>
-            <a href="#how" class="rounded-xl border border-slate-300 dark:border-slate-700 px-4 py-2.5 text-sm hover:bg-slate-50 dark:hover:bg-slate-800">See How it Works</a>
+            <a href="#upload"
+              class="rounded-xl bg-sky-600 text-white px-4 py-2.5 text-sm font-semibold shadow-glow hover:shadow-none hover:bg-sky-500">Try
+              Now</a>
+            <a href="#how"
+              class="rounded-xl border border-slate-300 dark:border-slate-700 px-4 py-2.5 text-sm hover:bg-slate-50 dark:hover:bg-slate-800">See
+              How it Works</a>
           </div>
           <dl id="metrics" class="mt-10 grid grid-cols-3 gap-4 text-center">
             <div class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
@@ -107,7 +142,7 @@
               <dd class="mt-1 text-xl font-bold">≥ 720p</dd>
             </div>
         </div>
-    </div>
+      </div>
   </section>
 
   <!-- FEATURES -->
@@ -115,51 +150,77 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="max-w-2xl">
         <h2 class="text-2xl md:text-3xl font-bold">Designed for <span class="text-sky-600">High Performance</span></h2>
-        <p class="mt-3 text-slate-600 dark:text-slate-300">Focus on speed, ease of use, and readiness for real-world sorting lines.</p>
+        <p class="mt-3 text-slate-600 dark:text-slate-300">Focus on speed, ease of use, and readiness for real-world
+          sorting lines.</p>
       </div>
       <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Feature card template -->
         <article class="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 bg-white/40 dark:bg-slate-900/40">
-          <div class="w-10 h-10 grid place-items-center rounded-xl bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300">
-            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M12 3l9 6-9 6-9-6 9-6zm0 9l9 6-9 6-9-6 9-6z"/></svg>
+          <div
+            class="w-10 h-10 grid place-items-center rounded-xl bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true">
+              <path d="M12 3l9 6-9 6-9-6 9-6zm0 9l9 6-9 6-9-6 9-6z" />
+            </svg>
           </div>
           <h3 class="mt-4 font-semibold">Optimized for Fast Loading</h3>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Uses SVG/system fonts, lazy-loading, and minimal JS to reduce TTI and CLS.</p>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Uses SVG/system fonts, lazy-loading, and minimal JS
+            to reduce TTI and CLS.</p>
         </article>
         <article class="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 bg-white/40 dark:bg-slate-900/40">
-          <div class="w-10 h-10 grid place-items-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
-            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h10v2H4v-2z"/></svg>
+          <div
+            class="w-10 h-10 grid place-items-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true">
+              <path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h10v2H4v-2z" />
+            </svg>
           </div>
           <h3 class="mt-4 font-semibold">Ready-to-use Insights</h3>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Summary tables, confidence statistics, pass/reject rates for QC.</p>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Summary tables, confidence statistics, pass/reject
+            rates for QC.</p>
         </article>
         <article class="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 bg-white/40 dark:bg-slate-900/40">
-          <div class="w-10 h-10 grid place-items-center rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
-            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M12 2l4 7h7l-5.5 4 2.5 7-6-4-6 4 2.5-7L1 9h7l4-7z"/></svg>
+          <div
+            class="w-10 h-10 grid place-items-center rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true">
+              <path d="M12 2l4 7h7l-5.5 4 2.5 7-6-4-6 4 2.5-7L1 9h7l4-7z" />
+            </svg>
           </div>
           <h3 class="mt-4 font-semibold">Factory-ready Design</h3>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Large buttons, touch-friendly, suitable for sorting lines or factories.</p>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Large buttons, touch-friendly, suitable for sorting
+            lines or factories.</p>
         </article>
         <article class="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 bg-white/40 dark:bg-slate-900/40">
-          <div class="w-10 h-10 grid place-items-center rounded-xl bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300">
-            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M12 1a4 4 0 014 4v3h3a4 4 0 014 4v7a4 4 0 01-4 4H9a4 4 0 01-4-4v-3H2a1 1 0 01-1-1V8a4 4 0 014-4h3V5a4 4 0 004-4z"/></svg>
+          <div
+            class="w-10 h-10 grid place-items-center rounded-xl bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true">
+              <path
+                d="M12 1a4 4 0 014 4v3h3a4 4 0 014 4v7a4 4 0 01-4 4H9a4 4 0 01-4-4v-3H2a1 1 0 01-1-1V8a4 4 0 014-4h3V5a4 4 0 004-4z" />
+            </svg>
           </div>
           <h3 class="mt-4 font-semibold">Privacy First</h3>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">All processing is done client-side in this demo. No files are uploaded to the server.</p>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">All processing is done client-side in this demo. No
+            files are uploaded to the server.</p>
         </article>
         <article class="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 bg-white/40 dark:bg-slate-900/40">
-          <div class="w-10 h-10 grid place-items-center rounded-xl bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">
-            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M5 3h14a2 2 0 012 2v14l-4-3H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>
+          <div
+            class="w-10 h-10 grid place-items-center rounded-xl bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true">
+              <path d="M5 3h14a2 2 0 012 2v14l-4-3H5a2 2 0 01-2-2V5a2 2 0 012-2z" />
+            </svg>
           </div>
           <h3 class="mt-4 font-semibold">API Ready</h3>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Frontend is clearly separated, ready to connect to inference APIs in the future.</p>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Frontend is clearly separated, ready to connect to
+            inference APIs in the future.</p>
         </article>
         <article class="rounded-2xl border border-slate-200 dark:border-slate-800 p-6 bg-white/40 dark:bg-slate-900/40">
-          <div class="w-10 h-10 grid place-items-center rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-800/60 dark:text-slate-200">
-            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M3 12l5 5L21 4l-2-2-11 11-3-3-2 2z"/></svg>
+          <div
+            class="w-10 h-10 grid place-items-center rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-800/60 dark:text-slate-200">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true">
+              <path d="M3 12l5 5L21 4l-2-2-11 11-3-3-2 2z" />
+            </svg>
           </div>
           <h3 class="mt-4 font-semibold">Accessible (A11y)</h3>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Uses semantic HTML, clear labels, keyboard and screen reader support.</p>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Uses semantic HTML, clear labels, keyboard and
+            screen reader support.</p>
         </article>
       </div>
     </div>
@@ -170,168 +231,197 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="max-w-3xl">
         <h2 class="text-2xl md:text-3xl font-bold">How it works</h2>
-        <p class="mt-3 text-slate-600 dark:text-slate-300">In real production, a conveyor + camera + CNN/Transformer model is used to detect defects (fungus, cracks, abnormal color), then sort using pneumatic solenoids/robotic arms.</p>
+        <p class="mt-3 text-slate-600 dark:text-slate-300">In real production, a conveyor + camera + CNN/Transformer
+          model is used to detect defects (fungus, cracks, abnormal color), then sort using pneumatic solenoids/robotic
+          arms.</p>
       </div>
       <div class="mt-10 grid gap-6 md:grid-cols-3">
         <div class="rounded-2xl p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
           <div class="w-10 h-10 grid place-items-center rounded-xl bg-slate-100 dark:bg-slate-800/60">
-            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor"><path d="M4 5h16v14H4V5zm2 2v10h12V7H6z"/></svg>
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor">
+              <path d="M4 5h16v14H4V5zm2 2v10h12V7H6z" />
+            </svg>
           </div>
           <h3 class="mt-4 font-semibold">1) Take a photo</h3>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Even lighting, contrasting background (e.g. black/white), reduce shadows and reflections.</p>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Even lighting, contrasting background (e.g.
+            black/white), reduce shadows and reflections.</p>
         </div>
         <div class="rounded-2xl p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-          <div class="w-10 h-10 grid place-items-center rounded-xl bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300">
-            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 4l7.5 13h-15L12 6z"/></svg>
+          <div
+            class="w-10 h-10 grid place-items-center rounded-xl bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor">
+              <path d="M12 2L1 21h22L12 2zm0 4l7.5 13h-15L12 6z" />
+            </svg>
           </div>
           <h3 class="mt-4 font-semibold">2) Analyze with AI</h3>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Classify <em>pass/fail</em>, defect locations, and confidence scores.</p>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Classify <em>pass/fail</em>, defect locations, and
+            confidence scores.</p>
         </div>
         <div class="rounded-2xl p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-          <div class="w-10 h-10 grid place-items-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
-            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor"><path d="M3 12h18v2H3v-2zm0 4h12v2H3v-2zm0-8h18v2H3V8z"/></svg>
+          <div
+            class="w-10 h-10 grid place-items-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor">
+              <path d="M3 12h18v2H3v-2zm0 4h12v2H3v-2zm0-8h18v2H3V8z" />
+            </svg>
           </div>
           <h3 class="mt-4 font-semibold">3) Automatic sorting</h3>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Connect PLC/robot to eject failed seeds from the conveyor.</p>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Connect PLC/robot to eject failed seeds from the
+            conveyor.</p>
         </div>
       </div>
     </div>
   </section>
 
-<!-- UPLOAD / DEMO -->
-<section id="upload" class="py-16">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="max-w-3xl">
-      <h2 class="text-2xl md:text-3xl font-bold">Try uploading seed images</h2>
-      <p class="mt-3 text-slate-600 dark:text-slate-300">The system will process with real AI.</p>
-    </div>
-
-    <div class="mt-6 grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-      <!-- INPUT: left -->
-      <div class="md:col-span-4 md:sticky top-24">
-        <!-- Upload form -->
-        <form method="POST" enctype="multipart/form-data"
-            class="group rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 p-6 text-center space-y-4">
-    
-    <img id="previewImg" class="mx-auto mt-4 max-h-48 rounded-xl hidden" alt="Image preview" />
-
-    <svg id="uploadIcon" viewBox="0 0 24 24" class="mx-auto w-10 h-10 text-slate-400" fill="currentColor">
-    <path d="M12 2l4 4h-3v7h-2V6H8l4-4zM5 20h14v-2H5v2z"/>
-    </svg>
-
-    <p id="fileHint" class="mt-3 font-medium">Choose an image file</p>
-
-    <div class="mt-2 flex flex-col items-center justify-center gap-2">
-      
-      <div class="flex gap-3">
-        <label for="fileInput" 
-               class="cursor-pointer rounded-xl bg-sky-600 text-white px-4 py-2 text-sm font-semibold hover:bg-sky-500 whitespace-nowrap">
-          Choose File
-        </label>
-
-        <button type="button" id="openCameraBtn" 
-                class="rounded-xl bg-indigo-600 text-white px-4 py-2 text-sm font-semibold hover:bg-indigo-500 whitespace-nowrap">
-          Open Camera
-        </button>
+  <!-- UPLOAD / DEMO -->
+  <section id="upload" class="py-16">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <h2 class="text-2xl md:text-3xl font-bold">Try uploading seed images</h2>
+        <p class="mt-3 text-slate-600 dark:text-slate-300">The system will process with real AI.</p>
       </div>
 
-      <span id="fileName" class="text-sm text-slate-500 dark:text-slate-400 truncate mt-1">
-        No file chosen
-      </span>
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+        <!-- INPUT: left -->
+        <div class="md:col-span-4 md:sticky top-24">
+          <!-- Upload form -->
+          <form id="dropzone" method="POST" enctype="multipart/form-data"
+            class="group rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 p-6 text-center space-y-4 transition-colors">
 
-      <input type="file" name="file" accept="image/*" required id="fileInput" class="hidden" />
-    </div>
+            <img id="previewImg" class="mx-auto mt-4 max-h-48 rounded-xl hidden" alt="Image preview" />
 
-    <div id="cameraUI" class="hidden flex-col items-center gap-3 mt-4 w-full">
-      <video id="cameraVideo" class="w-full max-h-64 rounded-xl object-cover bg-black" autoplay playsinline></video>
-      <div class="flex gap-2">
-        <button type="button" id="takePhotoBtn" class="rounded-xl bg-emerald-600 text-white px-4 py-2 text-sm font-semibold hover:bg-emerald-500">
-          Capture Photo
-        </button>
-        <button type="button" id="closeCameraBtn" class="rounded-xl bg-slate-200 text-slate-700 px-4 py-2 text-sm font-semibold hover:bg-slate-300">
-          Cancel
-        </button>
-      </div>
-    </div>
-    
-    <p class="mt-2 text-xs text-slate-500">Supports JPG/PNG up to ~10MB</p>
+            <svg id="uploadIcon" viewBox="0 0 24 24" class="mx-auto w-10 h-10 text-slate-400" fill="currentColor">
+              <path d="M12 2l4 4h-3v7h-2V6H8l4-4zM5 20h14v-2H5v2z" />
+            </svg>
 
-    <div class="flex flex-col gap-3">
-      <div class="text-left">
-        <p class="text-sm font-medium text-slate-700 dark:text-slate-200">Model speed</p>
-        <p class="text-xs text-slate-500 dark:text-slate-400">Select your desired analysis mode</p>
-        <div class="mt-2 inline-flex rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 overflow-hidden" role="group" aria-label="Model speed selector">
-          <button type="button" data-mode="fast"
-            class="mode-btn px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-200 bg-white dark:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500">
-            ResNet50V2
-          </button>
-          <button type="button" data-mode="slow"
-            class="mode-btn px-4 py-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500">
-            MobileNetV3
-          </button>
-        </div>
-        <input type="hidden" id="modelModeInput" name="mode" value="fast" />
-      </div>
+            <p id="fileHint" class="mt-3 font-medium">Choose, Drag & Drop, or Paste an image</p>
 
-      <div class="flex flex-col gap-2 text-left">
-        <div>
-          <div class="flex justify-between text-xs font-semibold text-slate-600 dark:text-slate-300">
-            <span>Upload</span>
-            <span id="uploadPercent">0%</span>
-          </div>
-          <div class="mt-1 h-2 w-full rounded-full bg-slate-200 dark:bg-slate-800">
-            <div id="uploadBar" class="h-2 rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 transition-all duration-300" style="width:0%"></div>
-          </div>
-        </div>
-        <div>
-          <div class="flex justify-between text-xs font-semibold text-slate-600 dark:text-slate-300">
-            <span>Analysis</span>
-            <span id="analysisPercent">0%</span>
-          </div>
-          <div class="mt-1 h-2 w-full rounded-full bg-slate-200 dark:bg-slate-800">
-            <div id="analysisBar" class="h-2 rounded-full bg-gradient-to-r from-emerald-500 to-lime-400 transition-all duration-300" style="width:0%"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+            <div class="mt-2 flex flex-col items-center justify-center gap-2">
 
-    <div class="flex gap-3 justify-center">
-        <button id="analyzeBtn" type="button"
+              <div class="flex gap-3">
+                <label for="fileInput"
+                  class="cursor-pointer rounded-xl bg-sky-600 text-white px-4 py-2 text-sm font-semibold hover:bg-sky-500 whitespace-nowrap">
+                  Choose File
+                </label>
+
+                <button type="button" id="openCameraBtn"
+                  class="rounded-xl bg-indigo-600 text-white px-4 py-2 text-sm font-semibold hover:bg-indigo-500 whitespace-nowrap">
+                  Open Camera
+                </button>
+              </div>
+
+              <span id="fileName" class="text-sm text-slate-500 dark:text-slate-400 truncate mt-1">
+                No file chosen
+              </span>
+
+              <input type="file" name="file" accept="image/*" required id="fileInput" class="hidden" />
+            </div>
+
+            <!-- Paste Input Box -->
+            <div class="mt-3 flex items-center justify-center">
+              <input type="text" id="pasteInput" placeholder="📋 Click here and press Ctrl+V to paste image"
+                class="w-full text-sm text-center rounded-xl border border-dashed border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 px-4 py-2.5 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors cursor-pointer"
+                readonly />
+            </div>
+
+            <div id="cameraUI" class="hidden flex-col items-center gap-3 mt-4 w-full">
+              <video id="cameraVideo" class="w-full max-h-64 rounded-xl object-cover bg-black" autoplay
+                playsinline></video>
+              <div class="flex gap-2">
+                <button type="button" id="takePhotoBtn"
+                  class="rounded-xl bg-emerald-600 text-white px-4 py-2 text-sm font-semibold hover:bg-emerald-500">
+                  Capture Photo
+                </button>
+                <button type="button" id="closeCameraBtn"
+                  class="rounded-xl bg-slate-200 text-slate-700 px-4 py-2 text-sm font-semibold hover:bg-slate-300">
+                  Cancel
+                </button>
+              </div>
+            </div>
+
+            <p class="mt-2 text-xs text-slate-500">Supports JPG/PNG up to ~10MB</p>
+
+            <div class="flex flex-col gap-3">
+              <div class="text-left">
+                <p class="text-sm font-medium text-slate-700 dark:text-slate-200">Model speed</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Select your desired analysis mode</p>
+                <div
+                  class="mt-2 inline-flex rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 overflow-hidden"
+                  role="group" aria-label="Model speed selector">
+                  <button type="button" data-mode="fast"
+                    class="mode-btn px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-200 bg-white dark:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500">
+                    ResNet50V2
+                  </button>
+                  <button type="button" data-mode="slow"
+                    class="mode-btn px-4 py-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500">
+                    MobileNetV3
+                  </button>
+                </div>
+                <input type="hidden" id="modelModeInput" name="mode" value="fast" />
+              </div>
+
+              <div class="flex flex-col gap-2 text-left">
+                <div>
+                  <div class="flex justify-between text-xs font-semibold text-slate-600 dark:text-slate-300">
+                    <span>Upload</span>
+                    <span id="uploadPercent">0%</span>
+                  </div>
+                  <div class="mt-1 h-2 w-full rounded-full bg-slate-200 dark:bg-slate-800">
+                    <div id="uploadBar"
+                      class="h-2 rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 transition-all duration-300"
+                      style="width:0%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-xs font-semibold text-slate-600 dark:text-slate-300">
+                    <span>Analysis</span>
+                    <span id="analysisPercent">0%</span>
+                  </div>
+                  <div class="mt-1 h-2 w-full rounded-full bg-slate-200 dark:bg-slate-800">
+                    <div id="analysisBar"
+                      class="h-2 rounded-full bg-gradient-to-r from-emerald-500 to-lime-400 transition-all duration-300"
+                      style="width:0%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex gap-3 justify-center">
+              <button id="analyzeBtn" type="button"
                 class="rounded-xl bg-sky-600 text-white px-4 py-2 text-sm font-semibold hover:bg-sky-500">
-        Analyze
-        </button>
-        </div>
-        </form>
-      </div>
-
-      <!-- OUTPUT: right -->
-      <div class="md:col-span-8">
-        <!-- Results -->
-        <div id="results" class="mt-0">
-    {% if prediction %}
-    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
-        <h3 class="font-semibold mb-3">Result</h3>
-        <p class="text-lg font-bold text-sky-600">{{ prediction }}</p>
-    </div>
-    {% endif %}
+                Analyze
+              </button>
+            </div>
+          </form>
         </div>
 
-        <table id="summaryTable" class="mt-4 w-full text-left border-collapse">
-    <thead>
-        <tr class="border-b border-slate-300 dark:border-slate-700">
-        <th class="p-2">Seed Type</th>
-        <th class="p-2">Percentage</th>
-        </tr>
-    </thead>
-    <tbody></tbody>
-        </table>
+        <!-- OUTPUT: right -->
+        <div class="md:col-span-8">
+          <!-- Results -->
+          <div id="results" class="mt-0">
+            {% if prediction %}
+            <div class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
+              <h3 class="font-semibold mb-3">Result</h3>
+              <p class="text-lg font-bold text-sky-600">{{ prediction }}</p>
+            </div>
+            {% endif %}
+          </div>
+
+          <table id="summaryTable" class="mt-4 w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-300 dark:border-slate-700">
+                <th class="p-2">Seed Type</th>
+                <th class="p-2">Percentage</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
-</section>
+  </section>
 
-<!-- Script at end of body -->
-<script src="static/js/script.js"></script>
+  <!-- Script at end of body -->
+  <script src="static/js/script.js"></script>
 
   <!-- FAQ -->
   <section id="faq" class="py-16 bg-slate-50/60 dark:bg-slate-900/40">
@@ -340,21 +430,34 @@
       <div class="mt-6 space-y-4">
         <details class="group rounded-2xl border border-slate-200 dark:border-slate-800 p-5">
           <summary class="cursor-pointer font-medium flex items-center justify-between">Does this demo use real AI?
-            <span class="ml-3 text-slate-400 group-open:rotate-180 transition"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5H7z"/></svg></span>
+            <span class="ml-3 text-slate-400 group-open:rotate-180 transition"><svg width="16" height="16"
+                viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 10l5 5 5-5H7z" />
+              </svg></span>
           </summary>
-          <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">This is a frontend simulation for UI/UX demonstration only. For real systems, connect to a model API (e.g. ONNX/TensorRT/TF Serving) via HTTPS.</p>
+          <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">This is a frontend simulation for UI/UX
+            demonstration only. For real systems, connect to a model API (e.g. ONNX/TensorRT/TF Serving) via HTTPS.</p>
         </details>
         <details class="group rounded-2xl border border-slate-200 dark:border-slate-800 p-5">
-          <summary class="cursor-pointer font-medium flex items-center justify-between">How is it suitable for factory use?
-            <span class="ml-3 text-slate-400 group-open:rotate-180 transition"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5H7z"/></svg></span>
+          <summary class="cursor-pointer font-medium flex items-center justify-between">How is it suitable for factory
+            use?
+            <span class="ml-3 text-slate-400 group-open:rotate-180 transition"><svg width="16" height="16"
+                viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 10l5 5 5-5H7z" />
+              </svg></span>
           </summary>
-          <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">UI is optimized for high contrast, large buttons, and includes offline mode + PWA to reduce network dependency.</p>
+          <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">UI is optimized for high contrast, large buttons,
+            and includes offline mode + PWA to reduce network dependency.</p>
         </details>
         <details class="group rounded-2xl border border-slate-200 dark:border-slate-800 p-5">
           <summary class="cursor-pointer font-medium flex items-center justify-between">What about image privacy?
-            <span class="ml-3 text-slate-400 group-open:rotate-180 transition"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5H7z"/></svg></span>
+            <span class="ml-3 text-slate-400 group-open:rotate-180 transition"><svg width="16" height="16"
+                viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 10l5 5 5-5H7z" />
+              </svg></span>
           </summary>
-          <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">This demo processes everything in the browser, does not send files to the server, and you can click “Clear All” to remove data from this page instantly.</p>
+          <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">This demo processes everything in the browser, does
+            not send files to the server, and you can click “Clear All” to remove data from this page instantly.</p>
         </details>
       </div>
     </div>
@@ -362,7 +465,8 @@
 
   <!-- FOOTER -->
   <footer class="py-10">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm text-slate-500 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div
+      class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm text-slate-500 flex flex-col md:flex-row items-center justify-between gap-4">
       <p>© <span id="year"></span> SoySelect.AI — Demo designed with HTML + Tailwind</p>
       <div class="flex items-center gap-3">
         <a href="#" class="hover:text-sky-600">Terms of Use</a>
@@ -397,4 +501,5 @@
     });
   </script>
 </body>
+
 </html>
