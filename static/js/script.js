@@ -1,3 +1,47 @@
+// --- คำอธิบายผลลัพธ์แต่ละประเภทเมล็ด ---
+const seedDescriptions = {
+  "Broken": {
+    emoji: "💔",
+    title: { th: "Broken — เมล็ดแตกหัก (Broken Seeds)", en: "Broken — (Broken Seeds)" },
+    text: {
+      th: "เมล็ดถั่วเหลืองที่มีการแตกหัก บิ่น หรือสูญเสียรูปทรงดั้งเดิม มักเกิดจากการปฏิบัติงานในขั้นตอนการเก็บเกี่ยว การสี หรือการขนส่งที่ไม่ระมัดระวังเพียงพอ เมล็ดในกลุ่มนี้จะมีการเสื่อมคุณภาพอย่างรวดเร็วเนื่องจากเนื้อเยื่อภายในสัมผัสกับอากาศ ส่งผลให้เกิดปฏิกิริยาออกซิเดชันและลดอายุการเก็บรักษา แม้ไม่เหมาะสมสำหรับใช้เป็นเมล็ดพันธุ์หรือการบริโภคโดยตรง แต่ยังคงสามารถนำไปใช้ในอุตสาหกรรมสกัดน้ำมันหรือแปรรูปเป็นวัตถุดิบอาหารสัตว์ได้",
+      en: "Soybean seeds that are broken, chipped, or have lost their original shape. Usually caused by rough handling during harvesting, milling, or transport. These seeds deteriorate quickly due to exposed internal tissues, leading to oxidation and reduced shelf life. While not suitable for seed use or direct consumption, they can be used in oil extraction or as animal feed."
+    }
+  },
+  "Immature": {
+    emoji: "🌱",
+    title: { th: "Immature — เมล็ดยังไม่สุก (Immature Seeds)", en: "Immature — (Immature Seeds)" },
+    text: {
+      th: "เมล็ดถั่วเหลืองที่ถูกเก็บเกี่ยวก่อนที่จะเจริญเติบโตเต็มที่ ลักษณะทางกายภาพมักมีขนาดเล็ก น้ำหนักเบา และมีสีเขียวหรือสีซีดกว่าเมล็ดที่สมบูรณ์ โครงสร้างทางเคมีของเมล็ดในกลุ่มนี้จะมีสัดส่วนของโปรตีนและไขมันต่ำกว่าเกณฑ์มาตรฐาน ซึ่งส่งผลโดยตรงต่อคุณภาพและอัตราผลผลิตในการนำไปแปรรูป และมักไม่ผ่านเกณฑ์มาตรฐานสำหรับการส่งออกหรือการใช้เป็นเมล็ดพันธุ์",
+      en: "Soybean seeds harvested before full maturity. They are physically small, light, and green or paler than mature seeds. The chemical structure has a lower proportion of protein and fat compared to standards, directly affecting quality and yield. They usually fail export or seed quality standards."
+    }
+  },
+  "Intact": {
+    emoji: "✅",
+    title: { th: "Intact — เมล็ดสมบูรณ์ (Intact Seeds)", en: "Intact — (Intact Seeds)" },
+    text: {
+      th: "เมล็ดถั่วเหลืองที่มีความสมบูรณ์สูงทั้งทางกายภาพและคุณภาพ ไม่มีร่องรอยการแตกหัก ความเสียหายจากการกระแทก หรือการติดเชื้อ มีสีสันสม่ำเสมอและรูปทรงตามลักษณะสายพันธุ์ เมล็ดในกลุ่มนี้จัดอยู่ในระดับคุณภาพสูงสุด (Premium Quality) ซึ่งมีความเหมาะสมอย่างยิ่งสำหรับการเพาะปลูก การส่งออกเชิงพาณิชย์ รวมถึงการแปรรูปเป็นผลิตภัณฑ์อาหารสำหรับมนุษย์ระดับพรีเมียม (เต้าหู้, นมถั่วเหลือง)",
+      en: "Soybean seeds with high physical and quality integrity. They show no signs of breakage, impact damage, or infection. They have consistent color and typical variety shapes. These seeds represent premium quality, highly suitable for cultivation, commercial export, and premium human food products like tofu and soy milk."
+    }
+  },
+  "Skin-damaged": {
+    emoji: "🧴",
+    title: { th: "Skin-damaged — เมล็ดเปลือกเสียหาย (Skin-damaged Seeds)", en: "Skin-damaged — (Skin-damaged Seeds)" },
+    text: {
+      th: "เมล็ดถั่วเหลืองที่มีร่องรอยความเสียหายบริเวณเปลือกหุ้มเมล็ด เช่น รอยขีดข่วน ถลอก หรือหลุดลอก ซึ่งอาจเป็นผลกระทบจากการเข้าทำลายของแมลง การขัดสีในระบบสายพานลำเลียง หรือการจัดเก็บในสภาวะความชื้นที่ไม่เหมาะสม การสูญเสียเปลือกป้องกันตามธรรมชาติทำให้เมล็ดมีความเสี่ยงสูงต่อการเข้าทำลายของเชื้อราและแบคทีเรีย รวมทั้งทำให้คุณภาพเสื่อมสภาพในอัตราที่เร่งขึ้น",
+      en: "Soybean seeds showing damage on the seed coat, such as scratches, abrasions, or peeling. This can result from insects, abrasion in conveyors, or improper storage humidity. The loss of the natural protective coat makes them highly vulnerable to fungal and bacterial infections and accelerates degradation."
+    }
+  },
+  "Spotted": {
+    emoji: "🔴",
+    title: { th: "Spotted — เมล็ดมีรอยด่างจุด (Spotted Seeds)", en: "Spotted — (Spotted Seeds)" },
+    text: {
+      th: "เมล็ดถั่วเหลืองที่ปรากฏรอยด่าง จุดสีดำ จุดสีน้ำตาล หรือความผิดปกติของเม็ดสีบนเปลือกเมล็ด สาเหตุหลักมักเกิดจากการติดเชื้อทางพยาธิวิทยา เช่น เชื้อรากลุ่ม Cercospora หรือ Phomopsis รวมถึงการเข้าทำลายของแมลงกัดเจาะ การปรากฏของจุดเหล่านี้บ่งชี้ถึงการปนเปื้อนทางชีวภาพซึ่งส่งผลกระทบโดยตรงต่อมาตรฐานความปลอดภัยด้านอาหาร ลดมูลค่าเชิงพาณิชย์ของผลผลิต และจำเป็นต้องถูกคัดแยกออก",
+      en: "Soybean seeds with spots, black dots, brown spots, or color abnormalities on the seed coat. Usually caused by pathological infections like Cercospora or Phomopsis fungi, or insect damage. The presence of these spots indicates biological contamination, affecting food safety standards and necessitates removal."
+    }
+  }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   // --- Element ฝั่งอัปโหลดและแสดงผลเดิม ---
   const fileInput = document.querySelector('input[type="file"]');
@@ -13,36 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const analysisPercent = document.getElementById("analysisPercent");
   const modeButtons = document.querySelectorAll(".mode-btn");
   const modelModeInput = document.getElementById("modelModeInput");
-
-  // --- คำอธิบายผลลัพธ์แต่ละประเภทเมล็ด ---
-  const seedDescriptions = {
-    "Broken": {
-      emoji: "💔",
-      title: "Broken — เมล็ดแตกหัก (Broken Seeds)",
-      text: "เมล็ดถั่วเหลืองที่มีการแตกหัก บิ่น หรือสูญเสียรูปทรงดั้งเดิม มักเกิดจากการปฏิบัติงานในขั้นตอนการเก็บเกี่ยว การสี หรือการขนส่งที่ไม่ระมัดระวังเพียงพอ เมล็ดในกลุ่มนี้จะมีการเสื่อมคุณภาพอย่างรวดเร็วเนื่องจากเนื้อเยื่อภายในสัมผัสกับอากาศ ส่งผลให้เกิดปฏิกิริยาออกซิเดชันและลดอายุการเก็บรักษา แม้ไม่เหมาะสมสำหรับใช้เป็นเมล็ดพันธุ์หรือการบริโภคโดยตรง แต่ยังคงสามารถนำไปใช้ในอุตสาหกรรมสกัดน้ำมันหรือแปรรูปเป็นวัตถุดิบอาหารสัตว์ได้"
-    },
-    "Immature": {
-      emoji: "🌱",
-      title: "Immature — เมล็ดยังไม่สุก (Immature Seeds)",
-      text: "เมล็ดถั่วเหลืองที่ถูกเก็บเกี่ยวก่อนที่จะเจริญเติบโตเต็มที่ ลักษณะทางกายภาพมักมีขนาดเล็ก น้ำหนักเบา และมีสีเขียวหรือสีซีดกว่าเมล็ดที่สมบูรณ์ โครงสร้างทางเคมีของเมล็ดในกลุ่มนี้จะมีสัดส่วนของโปรตีนและไขมันต่ำกว่าเกณฑ์มาตรฐาน ซึ่งส่งผลโดยตรงต่อคุณภาพและอัตราผลผลิตในการนำไปแปรรูป และมักไม่ผ่านเกณฑ์มาตรฐานสำหรับการส่งออกหรือการใช้เป็นเมล็ดพันธุ์"
-    },
-    "Intact": {
-      emoji: "✅",
-      title: "Intact — เมล็ดสมบูรณ์ (Intact Seeds)",
-      text: "เมล็ดถั่วเหลืองที่มีความสมบูรณ์สูงทั้งทางกายภาพและคุณภาพ ไม่มีร่องรอยการแตกหัก ความเสียหายจากการกระแทก หรือการติดเชื้อ มีสีสันสม่ำเสมอและรูปทรงตามลักษณะสายพันธุ์ เมล็ดในกลุ่มนี้จัดอยู่ในระดับคุณภาพสูงสุด (Premium Quality) ซึ่งมีความเหมาะสมอย่างยิ่งสำหรับการเพาะปลูก การส่งออกเชิงพาณิชย์ รวมถึงการแปรรูปเป็นผลิตภัณฑ์อาหารสำหรับมนุษย์ระดับพรีเมียม (เต้าหู้, นมถั่วเหลือง)"
-    },
-    "Skin-damaged": {
-      emoji: "🧴",
-      title: "Skin-damaged — เมล็ดเปลือกเสียหาย (Skin-damaged Seeds)",
-      text: "เมล็ดถั่วเหลืองที่มีร่องรอยความเสียหายบริเวณเปลือกหุ้มเมล็ด เช่น รอยขีดข่วน ถลอก หรือหลุดลอก ซึ่งอาจเป็นผลกระทบจากการเข้าทำลายของแมลง การขัดสีในระบบสายพานลำเลียง หรือการจัดเก็บในสภาวะความชื้นที่ไม่เหมาะสม การสูญเสียเปลือกป้องกันตามธรรมชาติทำให้เมล็ดมีความเสี่ยงสูงต่อการเข้าทำลายของเชื้อราและแบคทีเรีย รวมทั้งทำให้คุณภาพเสื่อมสภาพในอัตราที่เร่งขึ้น"
-    },
-    "Spotted": {
-      emoji: "🔴",
-      title: "Spotted — เมล็ดมีรอยด่างจุด (Spotted Seeds)",
-      text: "เมล็ดถั่วเหลืองที่ปรากฏรอยด่าง จุดสีดำ จุดสีน้ำตาล หรือความผิดปกติของเม็ดสีบนเปลือกเมล็ด สาเหตุหลักมักเกิดจากการติดเชื้อทางพยาธิวิทยา เช่น เชื้อรากลุ่ม Cercospora หรือ Phomopsis รวมถึงการเข้าทำลายของแมลงกัดเจาะ การปรากฏของจุดเหล่านี้บ่งชี้ถึงการปนเปื้อนทางชีวภาพซึ่งส่งผลกระทบโดยตรงต่อมาตรฐานความปลอดภัยด้านอาหาร ลดมูลค่าเชิงพาณิชย์ของผลผลิต และจำเป็นต้องถูกคัดแยกออก"
-    }
-  };
-
   // --- Element ฝั่งกล้อง (ที่เพิ่มเข้ามาใหม่) ---
   const openCameraBtn = document.getElementById('openCameraBtn');
   const closeCameraBtn = document.getElementById('closeCameraBtn');
@@ -132,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
           fileInput.files = dataTransfer.files;
           fileInput.dispatchEvent(new Event("change"));
         } else {
-          alert("Please drop an image file (JPG/PNG).");
+          alert(i18n.t("Please drop an image file (JPG/PNG)."));
         }
       }
     }, false);
@@ -167,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // แสดง feedback ที่ช่อง paste
       if (pasteInputEl) {
-        pasteInputEl.value = "✅ Image pasted!";
+        pasteInputEl.value = i18n.t("✅ Image pasted!");
         pasteInputEl.classList.add("border-emerald-500", "bg-emerald-50");
         setTimeout(() => {
           pasteInputEl.value = "";
@@ -193,7 +207,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (file) {
       fileNameSpan.textContent = file.name;
     } else {
-      fileNameSpan.textContent = "No file chosen";
+      fileNameSpan.textContent = i18n.t("No file chosen");
+      fileNameSpan._origText = "No file chosen"; // Store original to help tree walker if needed
     }
 
     if (!file) {
@@ -255,7 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
         uploadIcon.classList.add('hidden');
         fileHint.classList.add('hidden');
       } catch (err) {
-        alert("ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาตใช้งานกล้อง (Camera Permissions)");
+        alert(i18n.t("ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาตใช้งานกล้อง (Camera Permissions)"));
         console.error("Camera error:", err);
       }
     });
@@ -309,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
   analyzeBtn.addEventListener("click", () => {
     const file = fileInput.files[0];
     if (!file) {
-      alert("Please upload an image or take a photo first.");
+      alert(i18n.t("Please upload an image or take a photo first."));
       return;
     }
 
@@ -320,7 +335,8 @@ document.addEventListener("DOMContentLoaded", () => {
     setProgress(uploadBar, uploadPercent, 0);
     setProgress(analysisBar, analysisPercent, 0);
     analyzeBtn.disabled = true;
-    analyzeBtn.textContent = "Processing...";
+    analyzeBtn.textContent = i18n.t("Processing...");
+    analyzeBtn._origText = "Processing...";
 
     const xhr = new XMLHttpRequest();
     let analysisInterval = null;
@@ -353,19 +369,21 @@ document.addEventListener("DOMContentLoaded", () => {
     xhr.onerror = () => {
       stopAnalysisInterval();
       analyzeBtn.disabled = false;
-      analyzeBtn.textContent = "Analyze";
-      alert("An error occurred during upload. Please try again.");
+      analyzeBtn.textContent = i18n.t("Analyze");
+      analyzeBtn._origText = "Analyze";
+      alert(i18n.t("An error occurred during upload. Please try again."));
     };
 
     xhr.onload = () => {
       stopAnalysisInterval();
       setProgress(analysisBar, analysisPercent, 100);
       analyzeBtn.disabled = false;
-      analyzeBtn.textContent = "Analyze";
+      analyzeBtn.textContent = i18n.t("Analyze");
+      analyzeBtn._origText = "Analyze";
 
       const data = xhr.response;
       if (!data || data.error) {
-        alert(data?.error || "An error occurred on the server. Please try again.");
+        alert(data?.error ? i18n.t(data.error) : i18n.t("An error occurred on the server. Please try again."));
         return;
       }
 
@@ -389,7 +407,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      const modeLabel = data.mode === "slow" ? "Slow (Detailed)" : "Fast (Realtime)";
+      const modeLabel = data.mode === "slow" ? i18n.t("Slow (Detailed)") : i18n.t("Fast (Realtime)");
       resultDiv.textContent = `${modeLabel}: ${data.prediction}`;
 
       // --- แสดงคำอธิบายผลลัพธ์ ---
@@ -402,8 +420,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const info = seedDescriptions[data.prediction];
         if (info) {
           descEmoji.textContent = info.emoji;
-          descTitle.textContent = info.title;
-          descText.textContent = info.text;
+          descTitle.textContent = info.title[i18n.currentLang] || info.title.en;
+          descText.textContent = info.text[i18n.currentLang] || info.text.en;
           descContainer.classList.remove("hidden");
           descContainer.scrollIntoView({ behavior: "smooth", block: "nearest" });
         } else {
@@ -415,3 +433,170 @@ document.addEventListener("DOMContentLoaded", () => {
     xhr.send(formData);
   });
 });
+
+// ==========================================
+// --- ส่วนสลับภาษาและแปลภาษา (i18n) ---
+// ==========================================
+const i18n = {
+  currentLang: localStorage.getItem("lang") || "en",
+  dict: {
+    "Demo version • No user data stored": "เวอร์ชันสาธิต • ไม่เก็บข้อมูลผู้ใช้",
+    "Select": "คัดแยก",
+    "soybean seeds": "เมล็ดถั่วเหลือง",
+    "with AI": "ด้วย AI",
+    "Upload images of seeds or trays, the system will simulate quality classification and defect detection results, show confidence scores and next-step recommendations.": "อัปโหลดรูปภาพเมล็ดหรือถาด ระบบจะจำลองผลการจำแนกคุณภาพและการตรวจจับข้อบกพร่อง แสดงคะแนนความมั่นใจและคำแนะนำขั้นตอนต่อไป",
+    "Try Now": "ลองเลย",
+    "See How it Works": "ดูวิธีการทำงาน",
+    "Simulated Latency": "ความหน่วงจำลอง",
+    "Supported Files": "ไฟล์ที่รองรับ",
+    "Recommended Resolution": "ความละเอียดที่แนะนำ",
+    "Features": "ฟีเจอร์",
+    "How it works": "วิธีการทำงาน",
+    "Performance": "ประสิทธิภาพ",
+    "FAQ": "คำถามที่พบบ่อย",
+    "Designed for": "ออกแบบมาเพื่อ",
+    "High Performance": "ประสิทธิภาพสูง",
+    "Focus on speed, ease of use, and readiness for real-world sorting lines.": "เน้นความเร็ว ใช้งานง่าย และพร้อมสำหรับสายพานคัดแยกจริง",
+    "Optimized for Fast Loading": "โหลดเร็ว",
+    "Uses SVG/system fonts, lazy-loading, and minimal JS to reduce TTI and CLS.": "ใช้ SVG/ฟอนต์ระบบโหลดอย่างล่าช้า และ JS น้อยที่สุดเพื่อลด TTI และ CLS",
+    "Ready-to-use Insights": "ข้อมูลเชิงลึกพร้อมใช้",
+    "Summary tables, confidence statistics, pass/reject rates for QC.": "ตารางสรุป สถิติความมั่นใจ อัตราผ่าน/ตกสำหรับ QC",
+    "Factory-ready Design": "ดีไซน์พร้อมใช้งานอุตสาหกรรม",
+    "Large buttons, touch-friendly, suitable for sorting lines or factories.": "ปุ่มใหญ่ รองรับการสัมผัส เหมาะสำหรับสายพานคัดแยกหรือโรงงาน",
+    "Privacy First": "ความเป็นส่วนตัวต้องมาก่อน",
+    "All processing is done client-side in this demo. No files are uploaded to the server.": "การประมวลผลทั้งหมดทำในเบราว์เซอร์ ไม่มีการอัปโหลดไฟล์ไปที่เซิร์ฟเวอร์",
+    "API Ready": "พร้อมสำหรับเชื่อมต่อ API",
+    "Frontend is clearly separated, ready to connect to inference APIs in the future.": "ส่วนหน้ามีการแยกส่วนชัดเจน พร้อมเชื่อมต่อกับ API ประมวลผลในอนาคต",
+    "Accessible (A11y)": "เข้าถึงง่าย (A11y)",
+    "Uses semantic HTML, clear labels, keyboard and screen reader support.": "เขียน HTML ตามมาตรฐาน มีป้ายกำกับชัดเจน รองรับคีย์บอร์ดและโปรแกรมอ่านจอภาพ",
+    "In real production, a conveyor + camera + CNN/Transformer model is used to detect defects (fungus, cracks, abnormal color), then sort using pneumatic solenoids/robotic arms.": "ในการผลิตจริง ใช้สายพาน + กล้อง + โมเดล CNN/Transformer เพื่อตรวจจับข้อบกพร่อง (เชื้อรา รอยแตก สีผิดปกติ) แล้วคัดแยกด้วยลมพ่น/แขนกล",
+    "1) Take a photo": "1) ถ่ายรูปภาพ",
+    "Even lighting, contrasting background (e.g. black/white), reduce shadows and reflections.": "ใช้แสงคงที่ พื้นหลังตัดสีกัน (ช่น ดำ/ขาว) ลดเงาและแสงสะท้อนให้มากที่สุด",
+    "2) Analyze with AI": "2) ประมวลผลด้วย AI",
+    "Classify pass/fail, defect locations, and confidence scores.": "ตัดสินผ่าน/ตก, ตำแหน่งที่มีตำหนิ, และความมั่นใจในผลลัพธ์",
+    "3) Automatic sorting": "3) คัดแยกอัตโนมัติ",
+    "Connect PLC/robot to eject failed seeds from the conveyor.": "ส่งสัญญาณเชื่อม PLC/หุ่นยนต์ เพื่อดีดเป่าเมล็ดที่เสียออกจากสายพาน",
+    "Try uploading seed images": "ลองอัปโหลดรูปภาพ",
+    "The system will process with real AI.": "ระบบจะดำเนินการตรวจสอบด้วย AI จำลอง",
+    "Choose, Drag & Drop, or Paste an image": "เลือก ลากและวาง หรือวางรูปภาพ",
+    "Choose File": "เลือกไฟล์",
+    "Open Camera": "เปิดกล้อง",
+    "No file chosen": "ยังไม่ได้เลือกไฟล์",
+    "📋 Click here and press Ctrl+V to paste image": "📋 คลิกที่นี่แล้วกด Ctrl+V เพื่อวางรูปภาพ",
+    "Capture Photo": "ถ่ายรูป",
+    "Cancel": "ยกเลิก",
+    "Supports JPG/PNG up to ~10MB": "รองรับไฟล์ JPG/PNG ขนาดสูงสุด ~10MB",
+    "Model speed": "ความเร็วโมเดล",
+    "Select your desired analysis mode": "เลือกโหมดการประมวลผล",
+    "Upload": "อัปโหลด",
+    "Analysis": "วิเคราะห์",
+    "Analyze": "วิเคราะห์ผล",
+    "Processing...": "กำลังประมวลผล...",
+    "Result": "ผลลัพธ์",
+    "Seed Type": "ประเภทเมล็ด",
+    "Percentage": "เปอร์เซ็นต์",
+    "Frequently Asked Questions": "คำถามที่พบบ่อย",
+    "Does this demo use real AI?": "เว็บเดโมนี้ใช้ AI ของจริงหรือไม่?",
+    "This is a frontend simulation for UI/UX demonstration only. For real systems, connect to a model API (e.g. ONNX/TensorRT/TF Serving) via HTTPS.": "นี่เป็นการจำลองส่วนหน้าเพื่อให้เห็นภาพ UI/UX เท่านั้น ในระบบจริงจะต้องเชื่อมต่อ API (ONNX/TensorRT) ผ่านคลาวด์หรือเซิร์ฟเวอร์",
+    "How is it suitable for factory use?": "ทำไมถึงเหมาะใช้ที่โรงงาน?",
+    "UI is optimized for high contrast, large buttons, and includes offline mode + PWA to reduce network dependency.": "UI ถูกปรับคอนทราสต์ให้สูง ปุ่มกดขนาดใหญ่ และมีระบบรับไฟล์ที่ต่อออฟไลน์แอปผ่าน PWA ลดการพึ่งเน็ตได้",
+    "What about image privacy?": "เรื่องความเป็นส่วนตัวรูปภาพล่ะ?",
+    "This demo processes everything in the browser, does not send files to the server, and you can click “Clear All” to remove data from this page instantly.": "เดโมนี้ประมวลผลเบื้องต้นในเบราว์เซอร์ ไฟล์ต่างๆ ไม่ถูกอัปโหลดขึ้นเซิร์ฟเวอร์",
+    "Terms of Use": "ข้อตกลงและเงื่อนไข",
+    "Privacy Policy": "นโยบายความเป็นส่วนตัว",
+    "Mode": "โหมด",
+    "Try Upload": "ทดลองอัปโหลด",
+    "Demo": "เดโม",
+    "Please drop an image file (JPG/PNG).": "กรุณาวางไฟล์รูปภาพ (JPG/PNG)",
+    "✅ Image pasted!": "✅ วางรูปภาพแล้ว!",
+    "ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาตใช้งานกล้อง (Camera Permissions)": "ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการตั้งค่าเบราว์เซอร์",
+    "Please upload an image or take a photo first.": "กรุณาเลือกไฟล์หรือถ่ายภาพก่อน",
+    "An error occurred during upload. Please try again.": "เกิดข้อผิดพลาดในการอัปโหลด กรุณาลองใหม่อีกครั้ง",
+    "An error occurred on the server. Please try again.": "เกิดข้อผิดพลาดจากเซิร์ฟเวอร์ กรุณาลองใหม่อีกครั้ง",
+    "Slow (Detailed)": "ช้า (ละเอียด)",
+    "Fast (Realtime)": "เร็ว (เรียลไทม์)"
+  },
+  t: function (text) {
+    if (this.currentLang === "th") {
+      // Find translated text, or fallback to English
+      return this.dict[text] || this.dict[text.replace(/\s+/g, ' ')] || text;
+    }
+    return text;
+  },
+  apply: function (lang) {
+    this.currentLang = lang;
+    localStorage.setItem("lang", lang);
+    const langLabel = document.getElementById("langText");
+    if (langLabel) langLabel.textContent = lang.toUpperCase();
+
+    // 1. Walk through DOM Text Nodes and translate
+    const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+    let n;
+    while ((n = walk.nextNode())) {
+      // Ignore text within scripts and styles
+      if (['SCRIPT', 'STYLE'].includes(n.parentNode.nodeName)) continue;
+
+      let originalText = n._origText;
+      if (!originalText) {
+        originalText = n.nodeValue;
+        if (originalText.trim()) {
+          n._origText = originalText;
+        }
+      }
+
+      if (originalText && originalText.trim()) {
+        const normalized = originalText.replace(/\s+/g, ' ').trim();
+        if (this.dict[normalized]) {
+          const leading = originalText.match(/^\s*/)[0];
+          const trailing = originalText.match(/\s*$/)[0];
+          n.nodeValue = leading + (lang === "th" ? this.dict[normalized] : normalized) + trailing;
+        } else if (this.dict[originalText]) {
+          n.nodeValue = lang === "th" ? this.dict[originalText] : originalText;
+        }
+      }
+    }
+
+    // 2. Attributes and Placeholders
+    const pasteInput = document.getElementById("pasteInput");
+    if (pasteInput) {
+      if (lang === "th") {
+        pasteInput.placeholder = "📋 คลิกที่นี่แล้วกด Ctrl+V เพื่อวางรูปภาพ";
+      } else {
+        pasteInput.placeholder = "📋 Click here and press Ctrl+V to paste image";
+      }
+    }
+
+    // 3. Document language attribute
+    document.documentElement.lang = lang;
+
+    // 4. Update dynamically visible result titles if there is a prediction
+    const descResultEl = document.getElementById("resultDescription");
+    if (descResultEl && !descResultEl.classList.contains("hidden")) {
+      const titleEl = document.getElementById("descTitle");
+      const textEl = document.getElementById("descText");
+      if (titleEl && textEl) {
+        // Try to infer current seed type from title
+        for (const [key, info] of Object.entries(seedDescriptions)) {
+          if (titleEl.textContent.includes(key)) {
+            titleEl.textContent = info.title[lang] || info.title.en;
+            textEl.textContent = info.text[lang] || info.text.en;
+            break;
+          }
+        }
+      }
+    }
+  }
+};
+
+// Init script
+const langToggleBtn = document.getElementById("langToggle");
+if (langToggleBtn) {
+  langToggleBtn.addEventListener("click", () => {
+    i18n.apply(i18n.currentLang === "en" ? "th" : "en");
+  });
+}
+
+// Ensure initial run applies translations on startup if 'th' is default
+if (i18n.currentLang === "th") {
+  setTimeout(() => i18n.apply("th"), 100);
+}
