@@ -3,3 +3,4 @@ model/*.keras filter=lfs diff=lfs merge=lfs -text
 model/saved_model/variables/* filter=lfs diff=lfs merge=lfs -text
 model/soybean_dataset_split/**/*.bmp filter=lfs diff=lfs merge=lfs -text
 tfjs_model/*.bin filter=lfs diff=lfs merge=lfs -text
+*.pth filter=lfs diff=lfs merge=lfs -text

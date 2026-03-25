@@ -76,13 +76,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const setModeButtonStyles = (activeMode) => {
     modeButtons.forEach((btn) => {
       const isActive = btn.dataset.mode === activeMode;
-      btn.classList.toggle("bg-white", isActive);
-      btn.classList.toggle("text-sky-600", isActive);
-      btn.classList.toggle("dark:bg-slate-800", isActive);
-      btn.classList.toggle("dark:text-white", isActive);
+      // 1. สั่งลบสีที่อาจจะตีกันออกให้หมดก่อน (เพิ่ม text-slate-600 เข้าไปลบด้วย)
+      btn.classList.remove(
+        "bg-white", "text-sky-600", "shadow-sm", "dark:bg-slate-800", "dark:text-white",
+        "text-slate-500", "text-slate-600", "hover:text-slate-700", "dark:text-slate-400", "dark:hover:text-slate-200"
+      );
+
+      if (isActive) {
+        // 2. ถ้าถูกเลือก: เติมสีฟ้าสว่างๆ และเงา
+        btn.classList.add("bg-white", "text-sky-600", "shadow-sm", "dark:bg-slate-800", "dark:text-white");
+      } else {
+        // 3. ถ้าไม่ได้เลือก: เติมสีเทาจางๆ
+        btn.classList.add("text-slate-500", "hover:text-slate-700", "dark:text-slate-400", "dark:hover:text-slate-200");
+      }
     });
   };
-
   // --- การจัดการโหมด (Fast / Slow) ---
   let selectedMode = modelModeInput?.value || "fast";
   setModeButtonStyles(selectedMode);
@@ -407,7 +415,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      const modeLabel = data.mode === "slow" ? i18n.t("Slow (Detailed)") : i18n.t("Fast (Realtime)");
+      let modeLabel = "";
+      if (data.mode === "swin") {
+        modeLabel = "Swin Transformer";
+      } else if (data.mode === "slow") {
+        modeLabel = i18n.t("Slow (Detailed)");
+      } else {
+        modeLabel = i18n.t("Fast (Realtime)");
+      }
+
       resultDiv.textContent = `${modeLabel}: ${data.prediction}`;
 
       // --- แสดงคำอธิบายผลลัพธ์ ---
