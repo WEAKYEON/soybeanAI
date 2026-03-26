@@ -424,7 +424,12 @@ document.addEventListener("DOMContentLoaded", () => {
         modeLabel = i18n.t("Fast (Realtime)");
       }
 
-      resultDiv.textContent = `${modeLabel}: ${data.prediction}`;
+      const timeText = data.inference_time_ms
+        ? `<br><span class="text-sm font-normal text-slate-500 mt-1 block">Inference Time: ${data.inference_time_ms} ms</span>`
+        : "";
+
+      // ใช้ innerHTML แทน textContent เพื่อให้แสดงผลขึ้นบรรทัดใหม่ได้
+      resultDiv.innerHTML = `${modeLabel}: ${data.prediction} ${timeText}`;
 
       // --- แสดงคำอธิบายผลลัพธ์ ---
       const descContainer = document.getElementById("resultDescription");

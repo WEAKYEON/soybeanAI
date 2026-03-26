@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, jsonify
 from io import BytesIO
 import numpy as np
 import os
+import time
 from waitress import serve
 
 # --- นำเข้าไลบรารีฝั่ง TensorFlow / Keras ---
@@ -63,6 +64,9 @@ def predict():
     selected_model = None
     model_used_key = None 
 
+    # ⏳ 1. เริ่มจับเวลา (เริ่มนับตั้งแต่เตรียมแปลงรูปภาพ)
+    start_time = time.time()
+
     # ---------------------------------------------------------
     # --- [ส่วนที่ 2.1: ประมวลผลด้วย PyTorch (Swin Transformer)] ---
     # ---------------------------------------------------------
@@ -107,12 +111,19 @@ def predict():
         prediction = class_names[np.argmax(pred)]
         percentages = {class_names[i]: float(pred[i] * 100) for i in range(len(class_names))}
 
-    # ส่งผลลัพธ์กลับไปยังหน้าเว็บ
+    # 2. หยุดจับเวลา
+    end_time = time.time()
+    
+    # 3. คำนวณเวลาที่ใช้ไปทั้งหมด (แปลงเป็นมิลลิวินาที ทศนิยม 2 ตำแหน่ง)
+    inference_ms = round((end_time - start_time) * 1000, 2)
+
+    # 4. ส่งผลลัพธ์พร้อมเวลาที่จับได้ กลับไปยังหน้าเว็บ
     return jsonify({
         "prediction": prediction,
         "percentages": percentages,
         "mode": mode,
-        "model_used": model_used_key 
+        "model_used": model_used_key,
+        "inference_time_ms": inference_ms  
     })
 
 if __name__ == "__main__":
