@@ -346,32 +346,37 @@
             <p class="mt-2 text-xs text-slate-500">Supports JPG/PNG up to ~10MB</p>
 
             <div class="flex flex-col gap-3">
-              <div class="text-left">
-                <p class="text-sm font-medium text-slate-700 dark:text-slate-200">Model speed</p>
-                <p class="text-xs text-slate-500 dark:text-slate-400">Select your desired analysis mode</p>
-                
-                <div
-                  class="mt-2 grid grid-cols-2 gap-1 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900/40 p-1 overflow-hidden"
-                  role="group" aria-label="Model speed selector">
+                <div class="text-left">
+                  <p class="text-sm font-medium text-slate-700 dark:text-slate-200">Model Engine</p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">Select your desired AI model</p>
                   
-                  <button type="button" data-mode="fast"
-                    class="mode-btn w-full rounded-xl px-2 py-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 transition-all">
-                    ResNet50V2
-                  </button>
-                  
-                  <button type="button" data-mode="slow"
-                    class="mode-btn w-full rounded-xl px-2 py-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 transition-all">
-                    MobileNetV3
-                  </button>
+                  <div
+                    class="mt-2 grid grid-cols-2 gap-1 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900/40 p-1 overflow-hidden"
+                    role="group" aria-label="Model speed selector">
+                    
+                    <button type="button" data-mode="fast"
+                      class="mode-btn w-full rounded-xl px-2 py-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 transition-all">
+                      ResNet50V2
+                    </button>
+                    
+                    <button type="button" data-mode="slow"
+                      class="mode-btn w-full rounded-xl px-2 py-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 transition-all">
+                      MobileNetV3
+                    </button>
 
-                  <button type="button" data-mode="swin"
-                    class="mode-btn col-span-2 w-full rounded-xl px-2 py-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 transition-all">
-                    SwinTransformer
-                  </button>
+                    <button type="button" data-mode="swin"
+                      class="mode-btn w-full rounded-xl px-2 py-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 transition-all">
+                      SwinTrans...
+                    </button>
 
+                    <button type="button" data-mode="vit"
+                      class="mode-btn w-full rounded-xl px-2 py-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 transition-all">
+                      VisionTrans...
+                    </button>
+
+                  </div>
+                  <input type="hidden" id="modelModeInput" name="mode" value="vit" />
                 </div>
-                <input type="hidden" id="modelModeInput" name="mode" value="swin" />
-              </div>
 
               <div class="flex flex-col gap-2 text-left">
                 <div>

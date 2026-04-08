@@ -418,6 +418,8 @@ document.addEventListener("DOMContentLoaded", () => {
       let modeLabel = "";
       if (data.mode === "swin") {
         modeLabel = "Swin Transformer";
+      } else if (data.mode === "vit") {
+        modeLabel = "Vision Transformer";
       } else if (data.mode === "slow") {
         modeLabel = i18n.t("Slow (Detailed)");
       } else {

@@ -28,20 +28,24 @@ models_tf = {
     "model_ResNet50V2": load_model("model/soybean_classifier_model.h5") 
 }
 
+# ตั้งค่า Device สำหรับ PyTorch
+device = torch.device('cpu')
+
 # 1.2 โหลด PyTorch Model (Swin Transformer)
-device = torch.device('cpu') # บังคับรันบน CPU เพื่อความเสถียรบนเซิร์ฟเวอร์
-
 swin_model = timm.create_model('swin_tiny_patch4_window7_224', pretrained=False, num_classes=5)
-
-# โหลด Weights
 swin_model.load_state_dict(torch.load('model/swin_gamma05_best.pth', map_location=device))
 swin_model.eval()
+
+# 1.3 โหลด PyTorch Model (Vision Transformer - ViT) 🌟 [ส่วนที่เพิ่มใหม่]
+vit_model = timm.create_model('vit_base_patch16_224', pretrained=False, num_classes=5)
+vit_model.load_state_dict(torch.load('model/modelvit0.8.pth', map_location=device))
+vit_model.eval()
 
 print("Models loaded successfully.")
 
 class_names = ["Broken", "Immature", "Intact", "Skin-damaged", "Spotted"]
 
-# เตรียมฟังก์ชันแปลงรูปภาพสำหรับ PyTorch
+# เตรียมฟังก์ชันแปลงรูปภาพสำหรับ PyTorch (ใช้ร่วมกันได้ทั้ง Swin และ ViT)
 pytorch_transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -58,13 +62,13 @@ def predict():
     if not file:
         return jsonify({"error": "No file uploaded"}), 400
 
-    # รับค่า 'mode' ที่ส่งมาจากปุ่ม (เพิ่มโหมด swin เข้ามา)
+    # รับค่า 'mode' ที่ส่งมาจากปุ่ม (รองรับ fast, slow, swin, vit)
     mode = request.form.get("mode", "fast").lower()
     
     selected_model = None
     model_used_key = None 
 
-    # ⏳ 1. เริ่มจับเวลา (เริ่มนับตั้งแต่เตรียมแปลงรูปภาพ)
+    # 1. เริ่มจับเวลา 
     start_time = time.time()
 
     # ---------------------------------------------------------
@@ -73,23 +77,34 @@ def predict():
     if mode == "swin":
         model_used_key = "model_SwinTransformer"
         
-        # อ่านรูปภาพและแปลงเป็น RGB (ป้องกัน Error จากไฟล์ PNG พื้นหลังใส)
         pil_img = Image.open(BytesIO(file.read())).convert('RGB')
-        
-        # แปลงรูปเป็น Tensor
         input_tensor = pytorch_transform(pil_img).unsqueeze(0).to(device)
         
-        # พยากรณ์โดยไม่เก็บ Gradient (ประหยัด RAM)
         with torch.no_grad():
             outputs = swin_model(input_tensor)
-            # ใช้ Softmax แปลงค่าให้อยู่ในรูปแบบความน่าจะเป็น (0-1)
             probs = F.softmax(outputs[0], dim=0).cpu().numpy()
             
         prediction = class_names[np.argmax(probs)]
         percentages = {class_names[i]: float(probs[i] * 100) for i in range(len(class_names))}
 
     # ---------------------------------------------------------
-    # --- [ส่วนที่ 2.2: ประมวลผลด้วย Keras (ResNet / MobileNet)] ---
+    # --- [ส่วนที่ 2.2: ประมวลผลด้วย PyTorch (Vision Transformer)] --- 🌟 [ส่วนที่เพิ่มใหม่]
+    # ---------------------------------------------------------
+    elif mode == "vit":
+        model_used_key = "model_VisionTransformer"
+        
+        pil_img = Image.open(BytesIO(file.read())).convert('RGB')
+        input_tensor = pytorch_transform(pil_img).unsqueeze(0).to(device)
+        
+        with torch.no_grad():
+            outputs = vit_model(input_tensor)
+            probs = F.softmax(outputs[0], dim=0).cpu().numpy()
+            
+        prediction = class_names[np.argmax(probs)]
+        percentages = {class_names[i]: float(probs[i] * 100) for i in range(len(class_names))}
+
+    # ---------------------------------------------------------
+    # --- [ส่วนที่ 2.3: ประมวลผลด้วย Keras (ResNet / MobileNet)] ---
     # ---------------------------------------------------------
     else:
         if mode == "slow":
@@ -100,12 +115,10 @@ def predict():
             selected_model = models_tf["model_ResNet50V2"]
             model_used_key = "model_ResNet50V2"
 
-        # โหลดรูปภาพแบบ Keras
         img = image.load_img(BytesIO(file.read()), target_size=(224, 224))
         img_array = image.img_to_array(img) / 255.0
         img_array = np.expand_dims(img_array, axis=0)
 
-        # พยากรณ์
         pred = selected_model.predict(img_array)[0] 
         
         prediction = class_names[np.argmax(pred)]
